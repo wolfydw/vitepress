@@ -18,6 +18,11 @@ export default defineConfig({
 
     lastUpdated: true, 
 
+    editLink: {
+      pattern: 'https://github.com/wolfydw/vitepress/edit/main/docs/:path',
+      text: '在 GitHub 上编辑'
+    },
+
     outline: 'deep',
     outlineTitle: '目录',
 
