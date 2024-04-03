@@ -9,6 +9,9 @@ export default defineConfig({
   title: "杨达伟的知识库",
   description: "",
   base: '/vitepress/',
+  markdown: {
+    math: true
+  },
 
   themeConfig: {
     nav: [
