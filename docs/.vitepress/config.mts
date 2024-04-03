@@ -18,6 +18,8 @@ export default defineConfig({
 
     lastUpdated: true, 
 
+
+    base: '/vitepress/',
     outline: 'deep',
     outlineTitle: '目录',
 
