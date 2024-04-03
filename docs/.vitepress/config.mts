@@ -7,8 +7,8 @@ import sidebarConfig from '../sidebar.json'
 export default defineConfig({
 
   title: "杨达伟的知识库",
-
   description: "",
+  base: '/vitepress/',
 
   themeConfig: {
     nav: [
@@ -18,8 +18,6 @@ export default defineConfig({
 
     lastUpdated: true, 
 
-
-    base: '/vitepress/',
     outline: 'deep',
     outlineTitle: '目录',
 
