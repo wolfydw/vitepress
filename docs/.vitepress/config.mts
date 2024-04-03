@@ -1,0 +1,37 @@
+// 官方教程：https://vitepress.dev/zh/reference/site-config
+
+import { defineConfig } from 'vitepress'
+import sidebarConfig from '../sidebar.json'
+
+
+export default defineConfig({
+
+  title: "杨达伟的知识库",
+
+  description: "",
+
+  themeConfig: {
+    nav: [
+//      { text: '主页', link: '/' },
+      { text: '主页', link: '/' }
+    ],
+
+    lastUpdated: true, 
+
+    outline: 'deep',
+    outlineTitle: '目录',
+
+    search: {provider: 'local'}, // 全局搜索
+
+    sidebar: sidebarConfig, // 使用自动生成的侧边栏配置
+
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2024 - 情歌'
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+    ]
+  }
+})
