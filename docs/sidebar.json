@@ -1,0 +1,62 @@
+[
+  {
+    "text": "vitepress搭建",
+    "items": [
+      {
+        "text": "index",
+        "link": "/vitepress搭建/"
+      },
+      {
+        "text": "自动生成侧边栏",
+        "link": "/vitepress搭建/自动生成侧边栏"
+      }
+    ]
+  },
+  {
+    "text": "初中化学",
+    "items": [
+      {
+        "text": "index",
+        "link": "/初中化学/"
+      },
+      {
+        "text": "初中化学",
+        "link": "/初中化学/初中化学"
+      }
+    ]
+  },
+  {
+    "text": "杂谈",
+    "items": [
+      {
+        "text": "tizhi",
+        "link": "/杂谈/tizhi"
+      }
+    ]
+  },
+  {
+    "text": "软件",
+    "items": [
+      {
+        "text": "docsify",
+        "link": "/软件/docsify"
+      },
+      {
+        "text": "ffmpeg",
+        "link": "/软件/ffmpeg"
+      },
+      {
+        "text": "frp",
+        "link": "/软件/frp"
+      },
+      {
+        "text": "index",
+        "link": "/软件/"
+      },
+      {
+        "text": "mac",
+        "link": "/软件/mac"
+      }
+    ]
+  }
+]
