@@ -79,10 +79,11 @@ git push -u origin main
 git pull origin master
 ```
 
-本地修改完毕后，使用`-a`可以代替`git add`
+本地修改完毕后
 
 ```
-git commit -a -m "Update existing files with modifications"
+git add -A
+git commit -m "Update existing files with modifications"
 ```
 
 推送到远程仓库
