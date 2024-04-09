@@ -7,9 +7,9 @@ hero:
   text: ""
   tagline: "一个略懂计算机的初中老师"
   actions:
-    - theme: brand
-      text: 软件
-      link: /软件/
+    - theme: alt # brand
+      text: 初中化学
+      link: /初中化学/
     - theme: alt
       text: vitepress搭建
       link: /vitepress搭建/
