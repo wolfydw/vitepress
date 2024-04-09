@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "杨达伟的知识库"
   text: ""
-  tagline: "一个略懂计算机的初中数学老师"
+  tagline: "一个略懂计算机的初中老师"
   actions:
     - theme: brand
       text: 软件
