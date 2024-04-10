@@ -91,3 +91,69 @@ git commit -m "Update existing files with modifications"
 ```
 git push origin main
 ```
+
+## 疑难杂症
+
+### git出现分支怎么办？
+
+**方案一：合并（Merge）**
+
+合并是将远程分支的更改和你的本地分支更改合并在一起的方法。它会创建一个新的“合并提交”来表示这个合并。如果你想使用合并，可以设置 Git 以合并模式拉取：
+
+```
+git config pull.rebase false
+git pull origin main
+```
+
+这将会创建一个合并提交，如果有冲突，你需要手动解决它们。
+
+**方案二：变基（Rebase）**
+
+变基是另一种解决分叉的方法，它会把你本地分支上的提交重新应用到远程分支的最新提交之上。这样做的好处是可以保持项目历史更线性。
+
+```
+git config pull.rebase true
+git pull origin main
+```
+
+如果在变基过程中遇到冲突，你需要解决这些冲突，并继续变基过程。
+
+### 每个目录下都有.DS_Store文件
+
+`.DS_Store`文件是macOS特有的一个文件，它存储了其所在文件夹的自定义属性，如文件夹视图选项、图标位置以及其他视觉信息。`.DS_Store`是“Desktop Services Store”的缩写，反映了它的用途。这个文件由Finder应用程序在每个文件夹中创建和维护，其功能类似于Windows系统中的`desktop.ini`文件 。
+
+为了防止这些文件被提交到版本控制系统，你可以将`.DS_Store`添加到`.gitignore`文件中，以便忽略它们。
+
+如果在你执行`git push`之后，远程仓库中的`.DS_Store`文件依然存在，那么很可能是因为这些文件已经被提交并推送到了远程仓库中，在你将`.DS_Store`添加到`.gitignore`之后。`.gitignore`文件只会忽略尚未跟踪的文件，对于已经被Git跟踪的文件，即使后来被添加到`.gitignore`中，它们也不会自动从版本控制中删除。
+
+为了删除远程仓库中的`.DS_Store`文件，你需要先在本地仓库中删除这些文件，提交这个更改，然后再次推送到远程仓库。以下是具体步骤：
+
+#### 1. 删除本地仓库的`.DS_Store`文件
+
+首先，你可以在命令行中使用以下命令来查找并删除所有的`.DS_Store`文件：
+
+```
+find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+```
+
+这个命令会查找当前目录及其子目录中的所有`.DS_Store`文件，并使用`git rm`命令将它们从Git中删除。
+
+#### 2. 提交更改
+
+删除文件后，你需要提交这个更改：
+
+```
+git commit -m "Remove .DS_Store files"
+```
+
+#### 3. 推送到远程仓库
+
+最后，使用`git push`命令将这些更改推送到远程仓库：
+
+```
+git push origin main
+```
+
+请确保将`main`替换为你正在使用的分支的名称，如果是`master`分支则相应替换为`master`。
+
+这样操作后，`.DS_Store`文件就会从远程仓库中删除，而`.gitignore`文件会阻止这些文件将来被再次添加。不过，请记住，如果其他贡献者的本地仓库中仍然存在`.DS_Store`文件，并且他们没有在本地配置相应的`.gitignore`，那么这些文件可能会再次被推送到远程仓库中。分享`.gitignore`配置和确保团队成员了解如何使用它，可以帮助避免这种情况的发生。
