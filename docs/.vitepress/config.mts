@@ -1,8 +1,8 @@
-// 官方教程：https://vitepress.dev/zh/reference/site-config
+// 官方教程  https://vitepress.dev/zh/reference/site-config
+// https://vitepress.dev/reference/default-theme-config
 
 import { defineConfig } from 'vitepress'
 import sidebarConfig from '../sidebar.json'
-
 
 export default defineConfig({
 
