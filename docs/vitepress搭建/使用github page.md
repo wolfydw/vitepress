@@ -121,7 +121,7 @@ pnpm deploy:win
 
 选择我们刚刚上传的`gh-pages`分支，根目录，然后保存。
 
-![blog-1.png](ee0dad308e53494893166796463e383e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+配图
 
 然后就可以进入我们的博客网站查看效果啦。网站地址即是我们刚刚建立的仓库名称，即是`用户名.github.io`。例如我的网站是`jzplp.github.io`。
 
@@ -206,7 +206,7 @@ GitHub Actions的环境中提供了很多预置的配置和工具，例如Node.j
 
 然后打开GitHub配置，位置依旧在`Settings -> Pages -> Build and deployment -> Source`。将之前设置的`Deploy from a branch`，修改为`GitHub Actions`。
 
-![blog-2.png](190982f49df64f699b2da2095367778a~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+配图
 
 这时候我们每次写完博客，将工程代码push到GitHub仓库之后，GitHub会自动触发构建和发布流程，更新博客网站。上一节中的手动[构建和上传dist](#构建和上传dist)步骤就不需要执行了。
 
