@@ -1,2 +1,4 @@
-.DS_Store
-temp/
+node_modules
+docs/.vitepress/cache
+docs/.vitepress/dist
+**/.DS_Store # **是一个通配符，表示任意多层子目录
