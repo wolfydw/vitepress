@@ -1,4 +1,14 @@
 node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
-**/.DS_Store # **是一个通配符，表示任意多层子目录
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info
+.pytest_cache
+.ipynb_checkpoints
+
+thumbs.db
+.DS_Store
+.idea
