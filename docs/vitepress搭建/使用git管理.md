@@ -34,7 +34,9 @@ git init
 
 ```
 *.DS_Store # 忽略所有.DS_Store文件
-temp/ # 忽略所有名为temp的文件夹
+node_modules
+docs/.vitepress/cache
+docs/.vitepress/dist
 ```
 
 **添加文件到暂存区**：使用`git add`命令来添加文件到Git暂存区。如果你想添加当前目录下的所有文件（不包括.gitignore中指定的文件），可以使用`.`代表当前目录：
@@ -83,7 +85,7 @@ git pull origin master
 
 ```
 git add -A
-git commit -m "Update existing files with modifications"
+git commit -m "Update"
 ```
 
 推送到远程仓库
@@ -93,6 +95,26 @@ git push origin main
 ```
 
 ## 疑难杂症
+
+### 出现`.DS_Store`文件怎么办
+
+如果`.DS_Store`文件已经被提交并推送到了远程仓库中，你可以使用以下命令来查找并删除所有的`.DS_Store`文件
+
+```
+find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+```
+
+这个命令会查找当前目录及其子目录中的所有`.DS_Store`文件，并使用`git rm`命令将它们从Git中删除。
+
+提交并推送
+
+```
+git commit -m "Remove .DS_Store files"
+```
+
+```
+git push origin main
+```
 
 ### git出现分支怎么办？
 

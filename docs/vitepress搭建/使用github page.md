@@ -1,10 +1,12 @@
 ## 文章未完成
 
-最后更新时间：2024.4.11
+最后更新时间：2024.5.7
 
-预计完成时间：2024.5.11
+未完成部分
 
-
+- 完善工程结构
+- 只反代了1个Github page的ip
+- 适当的补图
 
 ## 工程结构
 
@@ -34,104 +36,33 @@ wolfydw.github.io
 └─README.md         # 工程说明
 ```
 
-目录中部分文件的作用会在下面描述。
+目录中部分文件的作用会在下文中有描述。
 
 
 
-## 构建和发布博客网站
+## 发布网站
 
-当构建好博客之后，我们现在本地进行构建和预览。命令在上面的[安装过程](#安装过程)一节中有描述。
+vitepress创建好之后，我们可以在本地先构建和预览，再部署到公网上
+
+- 部署在vps上
+
+  > 需要更高的技术能力
+
+- 部署在GitHub page
+
+  > 使用typora在本地编辑好md文件后，git push到远程仓库，利用action自动部署并发布到GitHub page
 
 ### 创建GitHub仓库
 
-创建仓库后，将我们刚刚创建的博客工程上传到GitHub仓库中。注意并不是所有文件都需要上传，因此我们先需要在工程根目录创建`.gitignore`，写入我们要忽略提交的文件，再进行上传。
+[参考教程](/使用git管理.html)
 
-```bash
-node_modules
-docs/.vitepress/cache
-docs/.vitepress/dist
-**/.DS_Store # **是一个通配符，表示任意多层子目录
-```
+### 使用GitHub Actions进行自动构建和发布
 
-上传工程代码的命令：
+GitHub Actions的环境中提供了很多预置的配置和工具，例如Node.js，pnpm等等，我们直接使用即可。如果你的工程目录和文中上述一致，那么直接复制配置文件内容到你的工程即可。
 
-```shell
-git add .
-git commit -m "创建博客工程"
-git push
-```
+如果想了解更多，可以参考[GitHub Actions文档](https://link.juejin.cn?target=https%3A%2F%2Fdocs.github.com%2Fzh%2Factions)以及其他人的配置。
 
-如果`.DS_Store`文件已经被提交并推送到了远程仓库中，你可以使用以下命令来查找并删除所有的`.DS_Store`文件
-
-```
-find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
-```
-
-这个命令会查找当前目录及其子目录中的所有`.DS_Store`文件，并使用`git rm`命令将它们从Git中删除。
-
-提交并推送
-
-```
-git commit -m "Remove .DS_Store files"
-```
-
-```
-git push origin main
-```
-
-### 构建和上传dist
-
-上一步我们上传的仅仅是工程的源代码。还需要上传构建成果，才能发布博客网站。我们在工程根目录创建文件`bin/autoDeploy.bat`，这是一个Windows系统下使用的脚本文件。
-
-```shell
-call pnpm docs:build
-cd docs/.vitepress/dist
-
-git init
-git add -A
-git commit -m "auto construct blog"
-
-git push -f https://github.com/jzplp/jzplp.github.io.git master:gh-pages
-```
-
-注意里面的push地址需要改成你自己的。
-
-文件内容即是我们的构建和发布流程：
-
-1. 构建工程，生成dist，并进入dist目录。
-2. 将dist目录中的内容上传至`gh-pages`分支中。
-
-如果使用非Windows系统，对该脚本文件后缀名和内容进行适当修改即可。
-
-我们在`package.json`的`scripts`中增加一条命令：
-
-```json
-"deploy:win": "powershell bin/autoDeploy.bat"
-```
-
-此时可以执行这条命令，即可完成dist构建包的上传。
-
-```shell
-pnpm deploy:win
-```
-
-### 发布博客网站
-
-我们进入你创建的GitHub仓库的配置，具体位置在`Settings -> Pages -> Build and deployment -> Source`。来源选择`Deploy from a branch`，即选择一个分支。
-
-选择我们刚刚上传的`gh-pages`分支，根目录，然后保存。
-
-配图
-
-然后就可以进入我们的博客网站查看效果啦。网站地址即是我们刚刚建立的仓库名称，即是`用户名.github.io`。例如我的网站是`jzplp.github.io`。
-
-## 使用GitHub Actions进行自动构建和发布
-
-使用上面描述的方法，我们每次写完博客，提交工程代码后，还需要手动构建，更新分支并发布。构建过程在本地电脑上。
-
-那么有没有方法让每次提交工程代码后，自动构建并发布呢？我们使用GitHub Actions就能做到这一点。而且GitHub还提供了服务器，我们可以把构建过程放到服务器中进行。
-
-首先创建配置文件，位置`.github/workflows/deploy.yml`。
+1. 创建`Actions`配置文件，位置`.github/workflows/deploy.yml`。
 
 ```yml
 # 构建 VitePress 站点并将其部署到 GitHub Pages 的工作流程
@@ -202,17 +133,27 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-GitHub Actions的环境中提供了很多预置的配置和工具，例如Node.js，pnpm等等，我们直接使用即可。如果你的工程目录和文中上述一致，那么直接复制该文件内容到你的工程即可。之后上传到工程代码GitHub仓库中。如果想了解更多，可以参考[GitHub Actions文档](https://link.juejin.cn?target=https%3A%2F%2Fdocs.github.com%2Fzh%2Factions)以及其他人的配置。
+2. 修改GitHub page配置，位置在`Settings -> Pages -> Build and deployment -> Source` ，选择`GitHub Actions`。
 
-然后打开GitHub配置，位置依旧在`Settings -> Pages -> Build and deployment -> Source`。将之前设置的`Deploy from a branch`，修改为`GitHub Actions`。
+   
 
-配图
+这样我们每次写完博客，将工程代码push到GitHub仓库之后（[如何push](/使用git管理.html#拉取远程仓库并修改)），GitHub会自动触发构建和发布流程，更新网站内容。我们通过`用户名.github.io`就可以访问。例如我的网站是`wolfydw.github.io`。
 
-这时候我们每次写完博客，将工程代码push到GitHub仓库之后，GitHub会自动触发构建和发布流程，更新博客网站。上一节中的手动[构建和上传dist](#构建和上传dist)步骤就不需要执行了。
+## 为GitHub page加速
 
-截止到这里，我们的博客就完成啦。
+因为不知名原因，GitHub page在国内访问总会出现各种各样的故障，我们可以利用带优化线路的海外vps对GitHub page进行反代加速
 
+### 前期准备
 
+- 一个域名
+- 一个带优化线路的海外vps
+- 一个脑子
+
+### 操作步骤
+
+1. 修改GitHub page默认域名，位置在`Settings -> Pages -> Build and deployment -> Custom domain`，填写你的域名，点`Save`保存。例如我的域名是`ydw.cool`
+2. 域名DNS设置A记录，指向vps的ip
+3. 在vps上搭建`nginx proxy manager`，将域名反代到`https://185.199.108.153:443`
 
 
 
