@@ -54,7 +54,7 @@ vitepress创建好之后，我们可以在本地先构建和预览，再部署�
 
 ### 创建GitHub仓库
 
-[参考教程](/使用git管理.html)
+参考教程/使用git管理.html
 
 ### 使用GitHub Actions进行自动构建和发布
 
