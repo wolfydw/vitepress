@@ -137,7 +137,7 @@ jobs:
 
    
 
-这样我们每次写完博客，将工程代码push到GitHub仓库之后（[如何push](/使用git管理.html#拉取远程仓库并修改)），GitHub会自动触发构建和发布流程，更新网站内容。我们通过`用户名.github.io`就可以访问。例如我的网站是`wolfydw.github.io`。
+这样我们每次写完博客，将工程代码push到GitHub仓库之后，GitHub会自动触发构建和发布流程，更新网站内容。我们通过`用户名.github.io`就可以访问。例如我的网站是`wolfydw.github.io`。
 
 ## 为GitHub page加速
 
