@@ -53,31 +53,47 @@ apt install default-jdk
 javac -version
 ```
 
-#### **部署TeamServer**
+
+
+CS组件分为客户端(Client)与服务端(Teamserver)。
+cobaltstrike.jar是客户端，teamserver是服务端
+
+#### 部署TeamServer
 
 在安装Cobalt Strike时，必须搭建团队服务器(也就是TeamServer服务器)
 
 1. 添加权限
 
 ```
-chmod +x teamserver cobaltstrike
+chmod +x teamserver cobaltstrike TeamServerImage
 ```
 
 2. 运行`teamserver`
 
 ```
-./teamserver xx.xx.xx.xx mima
+./teamserver <host/teamserver_ip> <teamserver_password> [/path/to/c2.profile] [YYYY-MM-DD]
 ```
 
-- 服务端开启后，记录下系统返回的端口号
+> <host/teamserver_ip>：必选参数，团队服务器的外部可达 IP 地址。
+>
+> <teamserver_password>：必选参数，密码
+>
+> [/path/to/c2.profile]：选填，这个参数指定一个「C2 拓展文件」
+>
+> [YYYY-MM-DD]：选填，此参数以 YYYY-MM-DD 的日期格式指定结束日期
 
+- 服务端开启后，记录下系统返回的端口号
 - 这里的密码和端口号都是登陆客户端(控制端)时需要使用的
 
+#### 客户端使用
 
+运行文件夹中的vbs，然后输入相应的服务端IP地址与密码
 
 #### 破解版下载
 
-[k8破解版](https://github.com/k8gege/Aggressor)
+https://github.com/k8gege/Aggressor
+
+https://github.com/inepts/cobaltstrike4_8
 
 #### 教程
 
