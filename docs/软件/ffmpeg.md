@@ -8,7 +8,7 @@ brew install ffmpeg
 
 ### bilibili视频解析
 
-https://snapany.com/zh/bilibili
+https://www.xiazaitool.com/blbl
 
 ## ffmpeg使用技巧
 
