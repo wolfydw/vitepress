@@ -40,7 +40,7 @@ Cobalt Strike是一个商业渗透测试工具，广泛用于安全培训和网�
 安装JRE，将允许你运行几乎所有的Java软件
 
 ```
-apt install default-jre
+apt install default-jre -y
 java -version
 ```
 
@@ -49,7 +49,7 @@ java -version
 要安装JDK，请执行下面的命令，它也将安装JRE。
 
 ```
-apt install default-jdk
+apt install default-jdk -y
 javac -version
 ```
 
@@ -65,7 +65,7 @@ cobaltstrike.jar是客户端，teamserver是服务端
 1. 添加权限
 
 ```
-chmod +x teamserver cobaltstrike TeamServerImage
+chmod +x teamserver TeamServerImage
 ```
 
 2. 运行`teamserver`
