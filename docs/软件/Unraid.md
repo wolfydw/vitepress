@@ -67,11 +67,66 @@ https://unraid.net
 
 ### 系统安装
 
-Unraid是U盘启动，参考开心版里面的教程就可以
+1. Unraid是U盘启动，参考官方版或者开心版里面的安装教程就可以
+2. 到bios里关闭fast boot相关的设置项
+3. U盘尽量使用USB2接口，USB3容易发热，影响U盘稳定性
+4. 进入网页GUI后，先设置NTP，系统时间不对无法申请到试用key
+5. 到`APPS`里搜索`简体中文语言包`安装，
 
 ### 系统使用
 
-安装完成后在浏览器输入ip登陆到Unraid的图形界面管理
+安装完成后在浏览器输入ip，或 http://tower.loacl 登陆到Unraid的图形界面管理
+
+### docker代理
+
+国内屏蔽docker.hub，需要自建代理
+
+1. 自建docker镜像：[GitHub - dqzboy/Docker-Proxy](https://github.com/dqzboy/Docker-Proxy?tab=readme-ov-file)
+
+2. npm反向代理，我这里是`https://hub.ydw.cool`
+   为确保代理依旧存活，可以在终端使用`crul -I https://hub.ydw.cool`进行检测
+   出现以下代码表示代理正常
+
+   ```
+   HTTP/2 200 
+   server: openresty
+   date: Tue, 23 Jul 2024 03:51:50 GMT
+   cache-control: no-cache
+   x-served-by: hub.ydw.cool
+   ```
+
+3. 打开unraid的`terminal`粘贴以下代码，回车
+   ```
+   mkdir -p /etc/docker
+   tee /etc/docker/daemon.json <<-'EOF'
+   {
+     "registry-mirrors": ["https://hub.ydw.cool"]
+   }
+   EOF
+   ```
+
+    1）第一行代码是创建一个 /etc/docker 目录
+    2）添加一个 daemon.json 的文件并填写以下参数内容
+
+4. 重启docker让设置生效。在SETTINGS(设置）=>Docker，先关闭docker，然后再启用docker，即先将docker 设置为 no, apply ,再设置 为yes, apply
+
+5. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
+   ```
+    Registry Mirrors:
+     https://hub.ydw.cool/
+   ```
+
+   
+
+### 支持NTFS和exFAT
+
+安装`Unassigned Devices` 和 `Unassigned Devices Plus`插件
+
+> 参考资料
+>
+> [unraid docker加速-修改unraid docker的镜像源（含国内网易等镜像源） - UnRaid - 我爱帮助网 (52help.net)](https://www.52help.net/unraid/251.mhtml)
+>
+> 
 
 ### 软路由
 
