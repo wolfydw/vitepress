@@ -16,6 +16,7 @@ chmod +x ./frps
 ```
 bindPort = 7000 # 与frpc.toml中的serverPort保持一致
 vhostHTTPPort = 8080
+vhostHTTPSPort = 8443
 ```
 
 > 服务器端配置解释：
@@ -24,17 +25,23 @@ vhostHTTPPort = 8080
 >
 > 2. **vhostHTTPPort (8080)**: 这个端口用于处理所有通过 HTTP 协议转发的请求。如果您在 FRP 客户端配置中使用了 `type` 为 `"http"` 的代理，并设置了 `customDomains`，这些 HTTP 请求将通过此端口进行路由。
 
-**安装systemd**
+## 使用 systemd
+
+> 在 Linux 系统下，使用 `systemd` 可以方便地控制 frps 服务端的启动、停止、配置后台运行以及开机自启动
+
+**安装 systemd**
 
 ```
 apt install systemd
 ```
 
 **在 /etc/systemd/system/ 创建 frps.service 文件**
+
 ```
 nano /etc/systemd/system/frps.service
 ```
 **写入以下内容**
+
 ```
 [Unit]
 # 服务名称，可自定义
@@ -52,6 +59,7 @@ WantedBy = multi-user.target
 ```
 
 **使用 systemd 命令管理 frps 服务**
+
 ```
 # 启动frp
 sudo systemctl start frps
@@ -90,10 +98,43 @@ type = "tcp"
 localPort = 8063
 remotePort = 9001  # 指定远程端口，客户端连接此端口将被转发到 localPort
 ```
+采用以上配置，并将`www.yourdomain.com`域名的DNS解析至frps所在服务器时，
+
+当你访问`www.yourdomain.com:8080`，会中转至客户端的80端口；
+
+访问`www.yourdomain.com:9091`，会中转至客户端的8063端口。
+
 **运行frpc**
+
 ```
 ./frpc -c frpc.toml  
 ```
+
+**也可以使用使用 systemd 管理 frpc 服务**
+
+参考上面frps的相关内容
+
+**设置 BasicAuth 鉴权**
+
+由于所有客户端共用一个 frps 的 HTTP 服务端口，任何知道你的域名和 URL 的人都能访问到你部署在内网的服务，但是在某些场景下需要确保只有限定的用户才能访问。
+
+frp 支持通过 HTTP Basic Auth 来保护你的 web 服务，使用户需要通过用户名和密码才能访问到你的服务。
+
+该功能目前仅限于 HTTP 类型的代理，需要在 frpc 的代理配置中添加用户名和密码的设置。
+
+```
+# frpc.toml
+
+[[proxies]]
+name = "web"
+type = "http"
+localPort = 80
+customDomains = ["test.yourdomain.com"]
+httpUser = "abc"
+httpPassword = "abc"
+```
+
+通过浏览器访问 `http://test.yourdomain.com`，需要输入配置的用户名和密码才能访问。
 
 ## 如何在 FRP 中为 TCP 代理启用 TLS
 
