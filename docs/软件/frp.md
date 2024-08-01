@@ -5,6 +5,8 @@ github：https://github.com/fatedier/frp
 
 中文文档：https://gofrp.org/zh-cn/
 
+dockerhub：https://hub.docker.com/r/snowdreamtech/frpc
+
 ## 安装frps
 克隆源码并给权限
 ```
