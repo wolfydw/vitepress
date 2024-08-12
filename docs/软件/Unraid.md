@@ -75,7 +75,7 @@ https://unraid.net
 
 ### 系统使用
 
-安装完成后在浏览器输入ip，或 http://tower.loacl 登陆到Unraid的图形界面管理
+安装完成后在浏览器输入ip，或 http://tower.local 登陆到Unraid的图形界面管理
 
 ### docker代理
 
@@ -84,7 +84,7 @@ https://unraid.net
 1. 自建docker镜像：[GitHub - dqzboy/Docker-Proxy](https://github.com/dqzboy/Docker-Proxy?tab=readme-ov-file)
 
 2. npm反向代理，我这里是`https://hub.ydw.cool`
-   为确保代理依旧存活，可以在终端使用`crul -I https://hub.ydw.cool`进行检测
+   为确保代理依旧存活，可以在终端使用`curl -I https://hub.ydw.cool`进行检测
    出现以下代码表示代理正常
 
    ```
@@ -100,7 +100,7 @@ https://unraid.net
    mkdir -p /etc/docker
    tee /etc/docker/daemon.json <<-'EOF'
    {
-     "registry-mirrors": ["https://hub.ydw.cool"]
+   "registry-mirrors": ["https://hub.ydw.cool"]
    }
    EOF
    ```
@@ -116,7 +116,10 @@ https://unraid.net
      https://hub.ydw.cool/
    ```
 
-   
+
+注意：由于 Unraid 是运行在内存中的系统，只有存储盘和 U 盘能够持久化数据，因此，存放在系统其他位置（如 /etc、/tmp 等目录）的数据在系统重启后会被清空。
+
+unraid默认的docker持久化目录是/mnt/user/appdata/
 
 ### 支持NTFS和exFAT
 
@@ -125,8 +128,16 @@ https://unraid.net
 > 参考资料
 >
 > [unraid docker加速-修改unraid docker的镜像源（含国内网易等镜像源） - UnRaid - 我爱帮助网 (52help.net)](https://www.52help.net/unraid/251.mhtml)
->
-> 
+
+
+
+### win10虚拟机访问共享文件夹
+
+创建好win10虚拟机后，在网络中可以发现TOWER，但是无法打开，提示`Windows无法访问\\TOWER`。
+
+在`组策略`中启用`启用不安全的来宾登录`，即可正常访问，操作方法如下：
+
+按`window+R` 输入 `gpedit.msc` 来启动本地组策略编辑器。依次点击计算机配置-管理模板-网络-Lanman工作站，在右侧找到“启用不安全的来宾登录”，双击“启用不安全的来宾登录”，将其状态修改为“已启用”并确定。
 
 ### 软路由
 
