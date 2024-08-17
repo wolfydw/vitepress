@@ -77,7 +77,7 @@ https://unraid.net
 
 > [!WARNING]
 >
-> 持久化数据
+> 有关持久化数据
 >
 > 由于 Unraid 是运行在内存中的系统，只有存储盘和 U 盘能够持久化数据，因此，存放在系统其他位置（如 /etc、/tmp 等目录）的数据在系统重启后会被清空。
 >
@@ -133,6 +133,8 @@ services:
     restart: unless-stopped
 ```
 
+> [!NOTE]
+>
 > 本镜像封装了 Clash 及 Clash Dashboard
 >
 > 项目地址：https://hub.docker.com/r/centralx/clash
@@ -140,6 +142,8 @@ services:
 > 缺点：Clash Dashboard不支持添加/修改订阅
 
 
+
+如果要使用clash-meta，可以尝试以下compose内容
 
 ```
 services:
@@ -165,12 +169,10 @@ services:
 
 
 
-
-
 #### 使用curl测试代理服务器正常工作
 
 ```
-curl -I -x http://192.168.0.105:7890 https://www.google.com
+curl -I -x http://127.0.0.1:7890 https://www.google.com
 ```
 正常情况下应该输出
 1.	HTTP/1.1 200 Connection established：
@@ -186,30 +188,34 @@ curl -I -x http://192.168.0.105:7890 https://www.google.com
 
 #### 方法一：设置docker pull走代理
 
-1. 打开终端输入以下命令，也可以手动 `nano /etc/docker/daemon.json`
+1. 打开unraid的`terminal`粘贴以下代码，回车
 
-	```
-	mkdir -p /etc/docker;
-	tee /etc/docker/daemon.json <<- EOF
-	{
-	  "proxies": {
-	    "http-proxy": "http://192.168.0.105:7890",
-	    "https-proxy": "http://192.168.0.105:7890",
-	    "no-proxy": "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-	  }
-	}
-	```
+  ```bash
+  mkdir -p /etc/docker;
+  tee /etc/docker/daemon.json <<- EOF
+  {
+    "proxies": {
+      "http-proxy": "http://127.0.0.1:7890",
+      "https-proxy": "http://127.0.0.1:7890",
+      "no-proxy": "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    }
+  }
+  ```
+
+  也可以手动编辑daemon.json文件 `nano /etc/docker/daemon.json`
 
 2. 重启docker让设置生效
 
-	```
-	/etc/rc.d/rc.docker restart
-	```
+  ```bash
+  /etc/rc.d/rc.docker restart
+  ```
+
+  也可以在设置中手动重启：SETTINGS(设置）=>Docker，先关闭再启用docker
 
 3. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
    ```
-   HTTP Proxy: http://192.168.0.105:7890
-   HTTPS Proxy: http://192.168.0.105:7890
+   HTTP Proxy: http://127.0.0.1:7890
+   HTTPS Proxy: http://127.0.0.1:7890
    No Proxy: localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
    ```
 
@@ -219,7 +225,7 @@ curl -I -x http://192.168.0.105:7890 https://www.google.com
 
 国内屏蔽docker.hub，需要自建镜像
 
-1. 自建docker镜像：[GitHub - dqzboy/Docker-Proxy](https://github.com/dqzboy/Docker-Proxy?tab=readme-ov-file)
+1. 自建docker镜像可参考：[GitHub - dqzboy/Docker-Proxy](https://github.com/dqzboy/Docker-Proxy?tab=readme-ov-file)
 
 2. npm反向代理，我这里是`https://hub.ydw.cool`
    为确保代理依旧存活，可以在终端使用`curl -I https://hub.ydw.cool`进行检测
@@ -252,25 +258,29 @@ curl -I -x http://192.168.0.105:7890 https://www.google.com
    /etc/rc.d/rc.docker restart
    ```
 
-   也可以在设置中手动重启：
-   在SETTINGS(设置）=>Docker，先关闭docker，然后再启用docker，即先将docker 设置为 no, apply ,再设置 为yes, apply
-
 5. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
    ```
     Registry Mirrors:
      https://hub.ydw.cool/
    ```
 
+> [!WARNING]
+>
+> 本方法下载小型镜像没有问题，当下载500M或以上镜像时，疑似会被限速，原因不明。所以推荐使用方法一为docker加速
+
+
+
 ### 让建立的docker容器走代理
 
+在已经建立好clash代理之后，可以在容器的compose中加入http代理相关的环境变量，例如
+
 ```
-version: '3'
 services:
   your-service:
     image: your-docker-image
     environment:
-      - HTTP_PROXY=http://192.168.0.105:7890
-      - HTTPS_PROXY=http://192.168.0.105:7890
+      - HTTP_PROXY=http://127.0.0.1:7890
+      - HTTPS_PROXY=http://127.0.0.1:7890
 ```
 
 
