@@ -36,7 +36,7 @@ Unraid
 
 https://unraid.net
 
-试用30天，正版折扣码 大鹏YYDS
+试用30天，购买正版可以使用65折扣码`大鹏YYDS`，
 
 **开心版**
 
@@ -161,7 +161,6 @@ services:
 >
 > 项目地址：https://hub.docker.com/r/centralx/clash
 >
-> 缺点：Clash Dashboard不支持添加/修改订阅
 
 
 
@@ -169,30 +168,36 @@ services:
 
 ```yaml
 services:
-  mihomo:
-    image: metacubex/mihomo
-    container_name: mihomo
+  metacubexd:
+    container_name: metacubexd
+    image: ghcr.io/metacubex/metacubexd
+    restart: unless-stopped
     ports:
-      - "7890:7890"
-      - "7891:7891"
-      - "9090:9090"
+      - '1234:80'
+    network_mode: bridge
+
+  # optional
+  meta:
+    container_name: meta
+    image: docker.io/metacubex/mihomo:Alpha
+    restart: unless-stopped
+    pid: host
+    ipc: host
+    network_mode: host
+    cap_add:
+      - ALL
     volumes:
       - ./config.yaml:/root/.config/mihomo/config.yaml
-    restart: unless-stopped
-    network_mode: bridge  # 明确指定使用桥接模式
-
-  yacd:
-    image: ghcr.io/haishanh/yacd:master
-    container_name: yacd
-    ports:
-      - "1234:80"
-    restart: unless-stopped
-    network_mode: bridge  # 明确指定使用桥接模式
+      - /dev/net/tun:/dev/net/tun
 ```
 
-> [!warning]
+> [!note]
 >
-> 以上compose在实际运行后，mihomo可以正常工作，但是yacd无法打开，原因不明
+> 项目地址：https://github.com/MetaCubeX/metacubexd
+>
+> compose文件根据项目介绍中的进行了一些改动
+>
+> PS：本来想使用ycad面板，但是怎么都启动不了，所以还是使用了xd面板
 
 
 
