@@ -8,9 +8,7 @@ quest2激活和使用需要科学上网环境，需要一个旁路由
 
 所以打算布置一台小主机
 
-## 解决方案
-
-### CPU选择
+### 小主机选择
 
 通过查询benchmark分数：[PassMark - CPU Benchmarks - List of Benchmarked CPUs](https://www.cpubenchmark.net/cpu_list.php)
 
@@ -56,7 +54,7 @@ https://unraid.net
 
 自行搜索，参考价19.9元
 
-## Unraid初始化设置
+## Unraid安装
 
 ### 参考教程
 
@@ -64,15 +62,17 @@ https://unraid.net
 
 ### 系统安装
 
-1. Unraid是U盘启动，参考官方版或者开心版里面的安装教程就可以
-2. 到bios里关闭fast boot相关的设置项
-3. U盘尽量使用USB2接口，USB3容易发热，影响U盘稳定性
-4. 进入网页GUI后，先设置NTP，系统时间不对无法申请到试用key
-5. 到`APPS`里搜索`简体中文语言包`安装，
+1. 准备一个启动U盘，用来安装unraid系统
+2. 使用官方安装程序烧录启动U盘：https://unraid.net/getting-started
+3. （开心版看下载链接里面的安装教程就可以）
+4. 到bios里关闭fast boot相关的设置项
+5. U盘尽量使用USB2接口，USB3容易发热，影响U盘稳定性
 
-### 系统使用
+### 推荐的初始化设置
 
-安装完成后在浏览器输入ip或 http://tower.local 登陆到Unraid的图形管理界面
+1. 安装完成后在浏览器输入ip或 http://tower.local 登陆到Unraid的图形管理界面
+2. 进入网页GUI后，先设置NTP，系统时间不对无法申请到试用key
+3. 到`APPS`里搜索`简体中文语言包`安装，切换为中文
 
 > [!WARNING] 有关持久化数据
 >
@@ -82,7 +82,7 @@ https://unraid.net
 
 
 
-## Unraid推荐安装
+## 推荐安装软件
 
 ### 部署mtphoto系列容器
 
@@ -108,7 +108,7 @@ https://unraid.net
 >
 > mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
 
-> [!NOTE] 相关项目地址
+> [!NOTE] clash-meta相关项目地址
 >
 > mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
 >
