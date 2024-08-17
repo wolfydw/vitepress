@@ -75,11 +75,13 @@ https://unraid.net
 
 
 
-> [!WARNING]持久化数据
+> [!WARNING]
+>
+> 持久化数据
 >
 > 由于 Unraid 是运行在内存中的系统，只有存储盘和 U 盘能够持久化数据，因此，存放在系统其他位置（如 /etc、/tmp 等目录）的数据在系统重启后会被清空。
 >
-> unraid默认的docker持久化目录是/mnt/user/appdata/
+> unraid默认的docker持久化目录是/mnt/user/appdata/，建议为每一个docker容器、APP单独在appdata目录下建立一个子目录，例如clash容器的持久化数据可以放在/mnt/user/appdata/clash/下
 
 
 
@@ -97,19 +99,49 @@ https://unraid.net
 
 ### 安装clash
 
-下载config.yaml到持久化目录
+切换至`/mnt/user/appdata/clash/`
+
+```
+cd /mnt/user/appdata/clash/
+```
+
+下载`config.yaml` 
 
 ```
 wget "机场给你的订阅链接" -O config.yaml
 ```
 
-
-
-项目地址：
+创建`docker-compose.yaml`
 
 ```
-version: '3'
+nano docker-compose.yaml
+```
 
+粘贴以下内容
+
+```
+services:
+  clash:
+    image: centralx/clash:1.18.0
+    container_name: clash
+    ports:
+      - "1234:80" # dashboard访问端口
+      - "7890:7890"
+      - "9090:9090"
+    volumes:
+      - "./config.yaml:/home/runner/.config/clash/config.yaml"
+    restart: unless-stopped
+```
+
+> 本镜像封装了 Clash 及 Clash Dashboard
+>
+> 项目地址：https://hub.docker.com/r/centralx/clash
+>
+> 缺点：Clash Dashboard不支持添加/修改订阅
+
+
+
+```
 services:
   # Clash
   clash:
@@ -132,31 +164,6 @@ services:
 ```
 
 
-
-
-
-
-
-本镜像封装了 Clash 及 Clash Dashboard
-
-项目地址：https://hub.docker.com/r/centralx/clash
-
-缺点：Clash Dashboard不支持添加/修改订阅
-
-```
-version: '3.8'
-
-services:
-  clash:
-    image: centralx/clash:1.18.0
-    container_name: clash
-    ports:
-      - "1234:80"
-      - "7890:7890"
-    volumes:
-      - "./config.yaml:/home/runner/.config/clash/config.yaml"
-    restart: unless-stopped
-```
 
 
 
