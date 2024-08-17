@@ -1,5 +1,7 @@
 ## 背景
 
+时间：2024年7月30日
+
 目前mtphoto部署在macmini上，导致macmini的硬盘吃紧
 
 quest2激活和使用需要科学上网环境，需要一个旁路由
@@ -26,8 +28,6 @@ N305：10089
 >
 > 接口：USB3.2×5/USB2.0×1/耳机接口×1/以太网卡x2/HDMIx 1/DPx 1/Type-Cx1/MicroSD读卡器x1
 
-
-
 ### 系统选择
 
 Unraid
@@ -42,7 +42,7 @@ https://unraid.net
 
 下载：[UNRAID 6.11.5 中文集成常用插件开心版 - 米多贝克&米多网络工程 (mi-d.cn)](https://mi-d.cn/4293)
 
-> [!NOTE]官网版本相比区别
+> [!NOTE]开心版与官网版的区别
 >
 > 1.免费
 >
@@ -55,8 +55,6 @@ https://unraid.net
 **闲鱼破解版**
 
 自行搜索，参考价19.9元
-
-
 
 ## Unraid初始化设置
 
@@ -74,7 +72,7 @@ https://unraid.net
 
 ### 系统使用
 
-安装完成后在浏览器输入ip，或 http://tower.local 登陆到Unraid的图形界面管理
+安装完成后在浏览器输入ip或 http://tower.local 登陆到Unraid的图形管理界面
 
 > [!WARNING] 有关持久化数据
 >
@@ -92,7 +90,7 @@ https://unraid.net
 - mtphoto ai
 - mtphoto deepface
 
-参考官方教程
+参考官方教程：https://mtmt.tech/docs/start/introduction
 
 
 
@@ -112,7 +110,7 @@ https://unraid.net
 
 > [!NOTE] 相关项目地址
 >
-> mihomo、Yacd-meta、ClashMetaForAndroid
+> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
 >
 > MetaCubeX的github：https://github.com/MetaCubeX
 >
@@ -154,6 +152,7 @@ services:
     volumes:
       - "./config.yaml:/home/runner/.config/clash/config.yaml"
     restart: unless-stopped
+    network_mode: bridge  # 明确指定使用桥接模式
 ```
 
 > [!note]
@@ -166,33 +165,34 @@ services:
 
 
 
-**clash-meta**
+**mihomo**
 
 ```yaml
 services:
-  # Clash
-  clash:
-    image: dreamacro/clash:latest
-    container_name: clash
-    volumes:
-      - ./config.yaml:/root/.config/clash/config.yaml
+  mihomo:
+    image: metacubex/mihomo
+    container_name: mihomo
     ports:
-      - "7890:7890/tcp"
-      - "7890:7890/udp"
+      - "7890:7890"
+      - "7891:7891"
       - "9090:9090"
-    restart: always
+    volumes:
+      - ./config.yaml:/root/.config/mihomo/config.yaml
+    restart: unless-stopped
+    network_mode: bridge  # 明确指定使用桥接模式
 
   yacd:
     image: ghcr.io/haishanh/yacd:master
     container_name: yacd
     ports:
       - "1234:80"
-    restart: always
+    restart: unless-stopped
+    network_mode: bridge  # 明确指定使用桥接模式
 ```
 
-**mihomo**
-
-
+> [!warning]
+>
+> 以上compose在实际运行后，mihomo可以正常工作，但是yacd无法打开，原因不明
 
 
 
@@ -201,43 +201,59 @@ services:
 ```bash
 curl -I -x http://127.0.0.1:7890 https://www.google.com
 ```
-正常情况下应该输出
-1.	HTTP/1.1 200 Connection established：
-这个表示代理服务器已经成功建立了与目标服务器（Google）的连接。
-2.	HTTP/2 200：
-表示 Google 服务器返回了一个成功的响应。
-3.	响应头：
-包含了 Google 服务器的各种 HTTP 头信息，如内容类型、缓存控制、cookie 等。
+正常情况下应该输出以下内容
+
+```bash
+root@Tower:/mnt/user/appdata/clash# curl -I -x http://127.0.0.1:7890 https://www.google.com
+HTTP/1.1 200 Connection established # 表示代理服务器已经成功建立了与目标服务器（Google）的连接
+
+HTTP/2 200 # 表示 Google 服务器返回了一个成功的响应
+# 以下为响应头：包含了 Google 服务器的各种 HTTP 头信息，如内容类型、缓存控制、cookie 等
+content-type: text/html; charset=ISO-8859-1
+content-security-policy-report-only: object-src 'none';base-uri 'self';script-src 'nonce-f5kB2uTcj6CJo5V5__HT6Q' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+date: Sat, 17 Aug 2024 08:06:45 GMT
+server: gws
+x-xss-protection: 0
+x-frame-options: SAMEORIGIN
+expires: Sat, 17 Aug 2024 08:06:45 GMT
+cache-control: private
+set-cookie: AEC=AVYB7cpQtK041cvCB3caIuUEDoisY7wkJCxFNNxoZpQ8mB1D_0xe0M0Atyk; expires=Thu, 13-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax
+set-cookie: NID=516=LRiJLF_TJtC32nHSTGBkUdwHo3QG7oSfGDXlrk1fkBd8X7ZN98qlfPRR_AVDcCVfEXavwPVUkhkhZD5meUxhaLX_xMCVxS0iviJW39YCcZrj9tZfIU9ain7xzMHNzKLYt4zgT2cr10QEQVoK-6b_0pr_G0iOH9s-glD5YDrNIdsKwmw3loGGrg; expires=Sun, 16-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+```
 
 
 
-### 拉不下docker怎么办？
+### 拉不下docker镜像怎么办？
+
+2024年6月，国内陆续屏蔽了dockerhub和所有公开镜像站，此后，在国内使用docker也需要科学上网
 
 #### 方法一：设置docker pull走代理
 
 1. 打开unraid的`terminal`粘贴以下代码，回车
 
-  ```bash
-  mkdir -p /etc/docker;
-  tee /etc/docker/daemon.json <<- EOF
-  {
-    "proxies": {
-      "http-proxy": "http://127.0.0.1:7890",
-      "https-proxy": "http://127.0.0.1:7890",
-      "no-proxy": "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-    }
-  }
-  ```
+   ```bash
+   mkdir -p /etc/docker;
+   tee /etc/docker/daemon.json <<- EOF
+   {
+     "proxies": {
+       "http-proxy": "http://127.0.0.1:7890",
+       "https-proxy": "http://127.0.0.1:7890",
+       "no-proxy":  "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+     }
+   }
+   ```
 
-  也可以手动编辑daemon.json文件 `nano /etc/docker/daemon.json`
+   也可以手动编辑daemon.json文件 `nano /etc/docker/daemon.json`
 
 2. 重启docker让设置生效
 
-  ```bash
-  /etc/rc.d/rc.docker restart
-  ```
+   ```bash
+   /etc/rc.d/rc.docker restart
+   ```
 
-  也可以在设置中手动重启：SETTINGS(设置）=>Docker，先关闭再启用docker
+   也可以在设置中手动重启：SETTINGS(设置）=>Docker，先关闭再启用docker
 
 3. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
    ```json
@@ -249,8 +265,6 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
    
 
 #### 方法二：使用docker镜像源
-
-国内屏蔽docker.hub，需要自建镜像
 
 1. 自建docker镜像可参考：[GitHub - dqzboy/Docker-Proxy](https://github.com/dqzboy/Docker-Proxy?tab=readme-ov-file)
 
@@ -276,8 +290,8 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
    EOF
    ```
 
-    1）第一行代码是创建一个 /etc/docker 目录
-    2）添加一个 daemon.json 的文件并填写以下参数内容
+   第一行代码是创建一个 /etc/docker 目录
+   添加一个 daemon.json 的文件并填写以下参数内容
 
 4. 重启docker让设置生效
 

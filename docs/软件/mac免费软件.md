@@ -1,8 +1,9 @@
-# MAC使用技巧
+# MAC免费软件
 
 ## Mac破解软件下载站
 
 - [XMac.App](https://xmac.app/)  资源很多，大部分来自 TNT team。无需登录，提供直链和 IPFS 下载
+- [苹果软件盒子](https://www.macappbox.com/) 无需登录，提供百度网盘下载
 - [MacWk - 精品mac软件下载](https://macwk.cn/)  网站无需登录也没有登录。基本上提供夸克云盘下载，部分软件只提供正版下载
 - 佛系软件 资源很多，大部分来自 TNT team。下载无需登录，提供百度云盘和夸克云盘下载
 - macked 资源很多，也有原创一手破解。无需登录，提供 123 云盘和百度网盘下载。登录网站可以直链下载，速度挺快，并且有问题在评论留言站长也会回复，非常不错
@@ -23,3 +24,4 @@ MacOS专用的包管理器
 - 软件管理：latest，https://max.codes
 - 软件管理：macupdater，https://www.corecode.io/macupdater/#download
 - 自动验证码：messauto，https://github.com/LeeeSe/MessAuto
+- 截图软件：longshot，支持截图ocr
