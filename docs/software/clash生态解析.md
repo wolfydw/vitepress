@@ -6,34 +6,41 @@
 
 **内核**
 
-- 原版开源clash：https://github.com/Dreamacro/clash，已删库
+- 原版开源clash：作者Dreamacro，已删库
 
 - Clash Premium：闭源的clash高级版，和开源clash同作者，已删库，最终版本2023.08.17
   备份下载地址：https://downloads.clash.wiki/ClashPremium
+  
+- mihomo：正常更新
+  项目地址：https://github.com/MetaCubeX/mihomo
 
 
 
 **套壳工具**
 
-- clashX：https://github.com/yichengchen/clashX，已删库
+- clashX：作者yichengchen，已删库
 
-- ClashForAndroid：https://github.com/Kr328/ClashForAndroid，已删库
+- ClashForAndroid：作者Kr328，已删库
 
 - clash for windows：闭源软件，作者Fndroid，已删库，最终版本 0.20.39
 
   备份下载地址：https://archive.org/download/clash_for_windows_pkg
 
-- Clash Verge：https://github.com/zzzgydi/clash-verge，已归档，最终版本1.3.8
+- Clash Verge：已归档，最终版本1.3.8
+  项目地址：https://github.com/zzzgydi/clash-verge
 
-- Clash Verge Rev：https://github.com/clash-verge-rev/clash-verge-rev，正常更新
+- Clash Verge Rev：正常更新
+  项目地址：https://github.com/clash-verge-rev/clash-verge-rev
 
 **面板**
 
 面板都是纯基于clash的API，所以只能提供基本的配置展示和切换等功能
 
-Clash Dashboard：已删库
-Yacd：
-Metacubed：
+- Clash Dashboard：作者Dreamacro，已删库
+- Yacd：2022年11月停更，最终版本0.38
+  项目地址：https://github.com/haishanh/yacd
+- Metacubed：正常更新
+  项目地址：https://github.com/MetaCubeX/metacubexd
 
 **插件**
 
@@ -4154,14 +4161,6 @@ rules:
 ```
 
 Clash切换内核增加自建协议
-
-
-
-
-
-
-
-
 
 
 

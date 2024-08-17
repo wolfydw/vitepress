@@ -4,9 +4,9 @@
 
 目前mtphoto部署在macmini上，导致macmini的硬盘吃紧
 
-quest2激活和使用需要科学上网环境，需要一个旁路由
+而且quest2激活和使用需要一个旁路由来提供科学上网环境
 
-所以打算布置一台小主机
+所以打算布置一台小主机，来跑mtphoto和clash
 
 ### 小主机选择
 
@@ -116,7 +116,6 @@ https://unraid.net
 >
 > mihomo docker：https://hub.docker.com/r/metacubex/mihomo
 >
-> yacd docker：https://hub.docker.com/r/haishanh/yacd
 
 切换至`/mnt/user/appdata/clash/`
 
@@ -197,7 +196,6 @@ services:
 >
 > compose文件根据项目介绍中的进行了一些改动
 >
-> PS：本来想使用ycad面板，但是怎么都启动不了，所以还是使用了xd面板
 
 
 
@@ -236,6 +234,8 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
 #### 方法一：设置docker pull走代理
 
+当你有一个能提供局域网共享代理的设备时，可以采用此种方案，等clash docker安装以后就转为走本机的代理
+
 1. 打开unraid的`terminal`粘贴以下代码，回车
 
    ```bash
@@ -250,7 +250,8 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
    }
    ```
 
-   也可以手动编辑daemon.json文件 `nano /etc/docker/daemon.json`
+   其中`127.0.0.1`替换为提供局域网共享代理的设备ip
+   此外，也可以手动编辑daemon.json文件 `nano /etc/docker/daemon.json`
 
 2. 重启docker让设置生效
 

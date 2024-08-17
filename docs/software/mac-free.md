@@ -1,5 +1,7 @@
 # MAC免费软件
 
+最后更新时间：2024年8月17日
+
 ## Mac破解软件下载站
 
 - [XMac.App](https://xmac.app/)  资源很多，大部分来自 TNT team。无需登录，提供直链和 IPFS 下载
