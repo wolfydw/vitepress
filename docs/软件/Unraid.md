@@ -76,8 +76,6 @@ https://unraid.net
 
 安装完成后在浏览器输入ip，或 http://tower.local 登陆到Unraid的图形界面管理
 
-
-
 > [!WARNING] 有关持久化数据
 >
 > 由于 Unraid 是运行在内存中的系统，只有存储盘和 U 盘能够持久化数据，因此，存放在系统其他位置（如 /etc、/tmp 等目录）的数据在系统重启后会被清空。
@@ -100,7 +98,27 @@ https://unraid.net
 
 ### 安装clash docker
 
-> [!import]clash版本区别
+选择想要的clash版本，不同版本的config文件格式不一样
+
+> [!important]clash版本区别
+>
+> 原版clash：开源内核，已删库
+>
+> Clash Premium：闭源内核，已删库
+>
+> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
+>
+> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
+
+> [!NOTE] 相关项目地址
+>
+> mihomo、Yacd-meta、ClashMetaForAndroid
+>
+> MetaCubeX的github：https://github.com/MetaCubeX
+>
+> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
+>
+> yacd docker：https://hub.docker.com/r/haishanh/yacd
 
 切换至`/mnt/user/appdata/clash/`
 
@@ -120,7 +138,9 @@ wget "机场给你的订阅链接" -O config.yaml
 nano docker-compose.yaml
 ```
 
-粘贴以下内容
+选择想要的clash版本并粘贴对应的compose内容
+
+**clash**
 
 ```yaml
 services:
@@ -146,7 +166,7 @@ services:
 
 
 
-如果要使用clash-meta，可以尝试以下compose内容
+**clash-meta**
 
 ```yaml
 services:
@@ -169,6 +189,10 @@ services:
       - "1234:80"
     restart: always
 ```
+
+**mihomo**
+
+
 
 
 
