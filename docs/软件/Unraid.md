@@ -18,7 +18,7 @@ N305：10089
 
 选择购买中柏N305
 
-> 配置如下
+> [!NOTE]配置如下
 >
 > 内存：插槽一个，支持笔记本DDR4 3200
 >
@@ -42,12 +42,15 @@ https://unraid.net
 
 下载：[UNRAID 6.11.5 中文集成常用插件开心版 - 米多贝克&米多网络工程 (mi-d.cn)](https://mi-d.cn/4293)
 
-> 官网版本相比区别
+> [!NOTE]官网版本相比区别
 >
-> 1. 免费
-> 2. 替换了官方的NTP服务器为国内可正常访问的NTP服务器，默认时区也改为中国北京
-> 3. 默认简体中文界面，集成 English, 繁体中文, 简体中文 方便大陆和港澳台用户使用
-> 4. 集成大量常用插件上手更加简单
+> 1.免费
+>
+> 2.替换了官方的NTP服务器为国内可正常访问的NTP服务器，默认时区也改为中国北京
+>
+> 3.默认简体中文界面，集成 English, 繁体中文, 简体中文 方便大陆和港澳台用户使用
+>
+> 4.集成大量常用插件上手更加简单
 
 **闲鱼破解版**
 
@@ -95,29 +98,31 @@ https://unraid.net
 
 
 
-### 安装clash
+### 安装clash docker
+
+> [!import]clash版本区别
 
 切换至`/mnt/user/appdata/clash/`
 
-```
+```bash
 cd /mnt/user/appdata/clash/
 ```
 
 下载`config.yaml` 
 
-```
+```bash
 wget "机场给你的订阅链接" -O config.yaml
 ```
 
 创建`docker-compose.yaml`
 
-```
+```bash
 nano docker-compose.yaml
 ```
 
 粘贴以下内容
 
-```
+```yaml
 services:
   clash:
     image: centralx/clash:1.18.0
@@ -131,7 +136,7 @@ services:
     restart: unless-stopped
 ```
 
-> [!NOTE]
+> [!note]
 >
 > 本镜像封装了 Clash 及 Clash Dashboard
 >
@@ -143,7 +148,7 @@ services:
 
 如果要使用clash-meta，可以尝试以下compose内容
 
-```
+```yaml
 services:
   # Clash
   clash:
@@ -169,7 +174,7 @@ services:
 
 #### 使用curl测试代理服务器正常工作
 
-```
+```bash
 curl -I -x http://127.0.0.1:7890 https://www.google.com
 ```
 正常情况下应该输出
@@ -211,7 +216,7 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
   也可以在设置中手动重启：SETTINGS(设置）=>Docker，先关闭再启用docker
 
 3. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
-   ```
+   ```json
    HTTP Proxy: http://127.0.0.1:7890
    HTTPS Proxy: http://127.0.0.1:7890
    No Proxy: localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
@@ -229,7 +234,7 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
    为确保代理依旧存活，可以在终端使用`curl -I https://hub.ydw.cool`进行检测
    出现以下代码表示代理正常
 
-   ```
+   ```bash
    HTTP/2 200 
    server: openresty
    date: Tue, 23 Jul 2024 03:51:50 GMT
@@ -238,7 +243,7 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
    ```
 
 3. 打开unraid的`terminal`粘贴以下代码，回车
-   ```
+   ```bash
    mkdir -p /etc/docker
    tee /etc/docker/daemon.json <<-'EOF'
    {
@@ -252,12 +257,12 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
 
 4. 重启docker让设置生效
 
-   ```
+   ```bash
    /etc/rc.d/rc.docker restart
    ```
 
 5. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
-   ```
+   ```bash
     Registry Mirrors:
      https://hub.ydw.cool/
    ```
@@ -272,7 +277,7 @@ curl -I -x http://127.0.0.1:7890 https://www.google.com
 
 在已经建立好clash代理之后，可以在容器的compose中加入http代理相关的环境变量，例如
 
-```
+```yaml
 services:
   your-service:
     image: your-docker-image
