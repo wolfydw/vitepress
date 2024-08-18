@@ -82,7 +82,7 @@ https://unraid.net
 
 
 
-## 推荐安装软件
+## Unraid进阶使用
 
 ### 部署mtphoto系列容器
 
@@ -195,7 +195,7 @@ https://unraid.net
 
 
 
-### 让建立的docker容器走代理
+### 让建立的docker容器走共享代理
 
 在已经建立好clash代理之后，可以在容器的compose中加入http代理相关的环境变量，例如
 
@@ -310,18 +310,24 @@ services:
 >
 > compose文件根据项目介绍中的进行了一些改动
 
-
+> [!important]
+>
+> 因为compose使用的网络模式是host，所以当容器启动后，整个unraid的网络都会被mihomo接管，unraid上所有的docker都会获得代理网络。
+>
+> 虚拟机因为有虚拟网卡，分配到了独立的内网ip，所以还需要单独配置代理。
 
 #### 使用curl测试代理服务器正常工作
 
+例如局域网内ip为192.168.0.105的设备开启了局域网共享，端口为7890，可以在终端输入
+
 ```bash
-curl -I -x http://127.0.0.1:7890 https://www.google.com
+curl -I -x http://192.168.0.105:7890 https://www.google.com
 ```
 
 正常情况下应该输出以下内容
 
 ```bash
-root@Tower:/mnt/user/appdata/clash# curl -I -x http://127.0.0.1:7890 https://www.google.com
+root@Tower:/mnt/user/appdata/clash# curl -I -x http://192.168.0.105:7890 https://www.google.com
 HTTP/1.1 200 Connection established # 表示代理服务器已经成功建立了与目标服务器（Google）的连接
 
 HTTP/2 200 # 表示 Google 服务器返回了一个成功的响应
@@ -350,11 +356,71 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 >
 > [unraid docker加速-修改unraid docker的镜像源（含国内网易等镜像源） - UnRaid - 我爱帮助网 (52help.net)](https://www.52help.net/unraid/251.mhtml)
 
+### 创建虚拟浏览器
+
+虚拟浏览器有很多，例如neko等等
+
+#### neko
+
+Neko不只是一个简单的私密浏览器，它的独特之处在于：
+
+1. **多用户体验**：支持多人同时在线，无论是家人还是同事，都可以在同一平台上共享和协作。
+2. **丰富应用支持**：除了浏览器，还可以运行如VLC等多种Linux应用，满足娱乐和工作的需求。
+3. **社交和互动**：提供实时交流和协作功能，创造了一种新型的线上社交体验。
+4. **隐私和安全**：所有操作都在安全的容器内完成，保护你的数据和隐私。
+5. **个性化定制**：用户可以根据个人需要定制Neko，适用于个人娱乐、团队协作或教育培训等多种场景。
+6. **文件传输**: 你可以在和好友家人互动的同时，实现文件互传
+
+项目地址：https://github.com/m1k1o/neko
+
+使用docker compose进行安装
+
+```
+services:
+  neko:
+    image: "m1k1o/neko:firefox"
+    restart: "unless-stopped"
+    shm_size: "2gb"
+    ports:
+      - "38080:8080"  # 端口可以根据需要更改
+      - "52000-52100:52000-52100/udp"
+    environment:
+      NEKO_SCREEN: 1920x1080@30  # 或选择 "1280x720@30" 更低分辨率
+      NEKO_PASSWORD: 1234  # 密码，根据需要更改
+      NEKO_PASSWORD_ADMIN: 12345  # 管理员密码，根据需要更改
+      NEKO_EPR: 52000-52100
+      NEKO_FILE_TRANSFER_ENABLED: true  # 是否开启文件传输，根据需要更改
+      NEKO_ICELITE: 1
+      NEKO_NAT1TO1: 192.168.0.100  # 内网ip，根据实际网络配置更改
+```
+
+> [!note]配置讲解
+>
+> webserver 的port 部分： 可以改为其他端口号 如"`38080:8080`" ，`不要修改后面`的8080
+>
+> NEKO_SCREEN： 配置neko的分辨率，`更高则要更好的配置`
+>
+> NEKO_PASSWORD： 访客登录密码
+>
+> NEKO_PASSWORD_ADMIN： 管理员登录密码
+>
+> NEKO_FILE_TRANSFER_ENABLED：是否开启文件传输
+>
+> NEKO_NAT1TO1： 配置为你当前内网ip
+>
+> 官方的完整参数列表：https://neko.m1k1o.net/#/getting-started/configuration
+
 
 
 ### 创建win10虚拟机
 
-创建过程很简单，和其他虚拟机的操作基本通用，这里记录一些常见问题
+可以实现的用途
+
+1. 通过todesk、向日葵等远控软件实现远程访问
+2. 跑一些需要长时间运行的软件，例如抢票软件bypass
+3. 访问和管理一些内网服务，例如tower.local
+
+创建过程很简单，和其他虚拟机的创建方法基本相同，这里记录一些常见问题
 
 #### 网络模式如何选择
 
