@@ -94,143 +94,20 @@ https://unraid.net
 
 
 
-### 安装clash docker
-
-选择想要的clash版本，不同版本的config文件格式不一样
-
-> [!important]clash版本区别
->
-> 原版clash：开源内核，已删库
->
-> Clash Premium：闭源内核，已删库
->
-> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
->
-> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
-
-> [!NOTE] clash-meta相关项目地址
->
-> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
->
-> MetaCubeX的github：https://github.com/MetaCubeX
->
-> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
->
-
-切换至`/mnt/user/appdata/clash/`
-
-```bash
-cd /mnt/user/appdata/clash/
-```
-
-下载`config.yaml` 
-
-```bash
-wget "机场给你的订阅链接" -O config.yaml
-```
-
-创建`docker-compose.yaml`
-
-```bash
-nano docker-compose.yaml
-```
-
-选择想要的clash版本并粘贴对应的compose内容
-
-**clash**
-
-```yaml
-services:
-  clash:
-    image: centralx/clash:1.18.0
-    container_name: clash
-    ports:
-      - "1234:80" # dashboard访问端口
-      - "7890:7890"
-      - "9090:9090"
-    volumes:
-      - "./config.yaml:/home/runner/.config/clash/config.yaml"
-    restart: unless-stopped
-    network_mode: bridge  # 明确指定使用桥接模式
-```
-
-> [!note]
->
-> 本镜像封装了 Clash 及 Clash Dashboard
->
-> 项目地址：https://hub.docker.com/r/centralx/clash
->
-
-
-
-**mihomo**
-
-```yaml
-services:
-  metacubexd:
-    container_name: metacubexd
-    image: ghcr.io/metacubex/metacubexd
-    restart: unless-stopped
-    ports:
-      - '1234:80'
-    network_mode: bridge
-
-  # optional
-  meta:
-    container_name: meta
-    image: docker.io/metacubex/mihomo:Alpha
-    restart: unless-stopped
-    pid: host
-    ipc: host
-    network_mode: host
-    cap_add:
-      - ALL
-    volumes:
-      - ./config.yaml:/root/.config/mihomo/config.yaml
-      - /dev/net/tun:/dev/net/tun
-```
-
-> [!note]
->
-> 项目地址：https://github.com/MetaCubeX/metacubexd
->
-> compose文件根据项目介绍中的进行了一些改动
->
-
-
-
-#### 使用curl测试代理服务器正常工作
-
-```bash
-curl -I -x http://127.0.0.1:7890 https://www.google.com
-```
-正常情况下应该输出以下内容
-
-```bash
-root@Tower:/mnt/user/appdata/clash# curl -I -x http://127.0.0.1:7890 https://www.google.com
-HTTP/1.1 200 Connection established # 表示代理服务器已经成功建立了与目标服务器（Google）的连接
-
-HTTP/2 200 # 表示 Google 服务器返回了一个成功的响应
-# 以下为响应头：包含了 Google 服务器的各种 HTTP 头信息，如内容类型、缓存控制、cookie 等
-content-type: text/html; charset=ISO-8859-1
-content-security-policy-report-only: object-src 'none';base-uri 'self';script-src 'nonce-f5kB2uTcj6CJo5V5__HT6Q' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp
-p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
-date: Sat, 17 Aug 2024 08:06:45 GMT
-server: gws
-x-xss-protection: 0
-x-frame-options: SAMEORIGIN
-expires: Sat, 17 Aug 2024 08:06:45 GMT
-cache-control: private
-set-cookie: AEC=AVYB7cpQtK041cvCB3caIuUEDoisY7wkJCxFNNxoZpQ8mB1D_0xe0M0Atyk; expires=Thu, 13-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax
-set-cookie: NID=516=LRiJLF_TJtC32nHSTGBkUdwHo3QG7oSfGDXlrk1fkBd8X7ZN98qlfPRR_AVDcCVfEXavwPVUkhkhZD5meUxhaLX_xMCVxS0iviJW39YCcZrj9tZfIU9ain7xzMHNzKLYt4zgT2cr10QEQVoK-6b_0pr_G0iOH9s-glD5YDrNIdsKwmw3loGGrg; expires=Sun, 16-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; HttpOnly
-alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-```
-
-
-
 ### 拉不下docker镜像怎么办？
 
 2024年6月，国内陆续屏蔽了dockerhub和所有公开镜像站，此后，在国内使用docker也需要科学上网
+
+有两个解决方案：
+
+1. 有能开局域网共享的代理设备，修改`/etc/docker/daemon.json`文件，让docker走共享代理
+2. 有自建的docker源，修改`/etc/docker/daemon.json`文件，让docker走自建源
+
+> [!WARNING] 
+>
+> 因为daemon.josn文件在/etc中，重启后会被还原，需要重新设置代理。
+>
+> 如需要永久设置，可以修改`U盘/config/go`文件。
 
 #### 方法一：设置docker pull走代理
 
@@ -248,6 +125,7 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
        "no-proxy":  "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
      }
    }
+   EOF
    ```
 
    其中`127.0.0.1`替换为提供局域网共享代理的设备ip
@@ -332,6 +210,138 @@ services:
 
 
 
+### 安装clash docker
+
+选择想要的clash版本，不同版本的config文件格式不一样
+
+> [!important]clash版本区别
+>
+> 原版clash：开源内核，已删库
+>
+> Clash Premium：闭源内核，已删库
+>
+> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
+>
+> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
+
+> [!NOTE] clash-meta相关项目地址
+>
+> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
+>
+> MetaCubeX的github：https://github.com/MetaCubeX
+>
+> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
+
+切换至`/mnt/user/appdata/clash/`
+
+```bash
+cd /mnt/user/appdata/clash/
+```
+
+下载`config.yaml` 
+
+```bash
+wget "机场给你的订阅链接" -O config.yaml
+```
+
+创建`docker-compose.yaml`
+
+```bash
+nano docker-compose.yaml
+```
+
+选择想要的clash版本并粘贴对应的compose内容
+
+**clash**
+
+```yaml
+services:
+  clash:
+    image: centralx/clash:1.18.0
+    container_name: clash
+    ports:
+      - "1234:80" # dashboard访问端口
+      - "7890:7890"
+      - "9090:9090"
+    volumes:
+      - "./config.yaml:/home/runner/.config/clash/config.yaml"
+    restart: unless-stopped
+    network_mode: bridge  # 明确指定使用桥接模式
+```
+
+> [!note]
+>
+> 本镜像封装了 Clash 及 Clash Dashboard
+>
+> 项目地址：https://hub.docker.com/r/centralx/clash
+
+
+
+**mihomo**
+
+```yaml
+services:
+  metacubexd:
+    container_name: metacubexd
+    image: ghcr.io/metacubex/metacubexd
+    restart: unless-stopped
+    ports:
+      - '1234:80'
+    network_mode: bridge
+
+  # optional
+  meta:
+    container_name: meta
+    image: docker.io/metacubex/mihomo:Alpha
+    restart: unless-stopped
+    pid: host
+    ipc: host
+    network_mode: host
+    cap_add:
+      - ALL
+    volumes:
+      - ./config.yaml:/root/.config/mihomo/config.yaml
+      - /dev/net/tun:/dev/net/tun
+```
+
+> [!note]
+>
+> 项目地址：https://github.com/MetaCubeX/metacubexd
+>
+> compose文件根据项目介绍中的进行了一些改动
+
+
+
+#### 使用curl测试代理服务器正常工作
+
+```bash
+curl -I -x http://127.0.0.1:7890 https://www.google.com
+```
+
+正常情况下应该输出以下内容
+
+```bash
+root@Tower:/mnt/user/appdata/clash# curl -I -x http://127.0.0.1:7890 https://www.google.com
+HTTP/1.1 200 Connection established # 表示代理服务器已经成功建立了与目标服务器（Google）的连接
+
+HTTP/2 200 # 表示 Google 服务器返回了一个成功的响应
+# 以下为响应头：包含了 Google 服务器的各种 HTTP 头信息，如内容类型、缓存控制、cookie 等
+content-type: text/html; charset=ISO-8859-1
+content-security-policy-report-only: object-src 'none';base-uri 'self';script-src 'nonce-f5kB2uTcj6CJo5V5__HT6Q' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+date: Sat, 17 Aug 2024 08:06:45 GMT
+server: gws
+x-xss-protection: 0
+x-frame-options: SAMEORIGIN
+expires: Sat, 17 Aug 2024 08:06:45 GMT
+cache-control: private
+set-cookie: AEC=AVYB7cpQtK041cvCB3caIuUEDoisY7wkJCxFNNxoZpQ8mB1D_0xe0M0Atyk; expires=Thu, 13-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax
+set-cookie: NID=516=LRiJLF_TJtC32nHSTGBkUdwHo3QG7oSfGDXlrk1fkBd8X7ZN98qlfPRR_AVDcCVfEXavwPVUkhkhZD5meUxhaLX_xMCVxS0iviJW39YCcZrj9tZfIU9ain7xzMHNzKLYt4zgT2cr10QEQVoK-6b_0pr_G0iOH9s-glD5YDrNIdsKwmw3loGGrg; expires=Sun, 16-Feb-2025 08:06:45 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+```
+
+
+
 ### 支持NTFS和exFAT
 
 安装`Unassigned Devices` 和 `Unassigned Devices Plus`插件
@@ -342,13 +352,45 @@ services:
 
 
 
-### win10虚拟机访问共享文件夹
+### 创建win10虚拟机
+
+创建过程很简单，和其他虚拟机的操作基本通用，这里记录一些常见问题
+
+#### 网络模式如何选择
+
+unraid6.12.11提供5种网络模式，建议选择virtio-net
+
+> [!note]各网络模式详解
+>
+> **virtio-net** - 这是一种为虚拟化环境优化的网络适配器，提供高效率的网络性能，常用于 KVM/QEMU 虚拟机。
+>
+> **e1000** - 模拟 Intel e1000 网络卡的适配器，被广泛支持，适用于兼容性较高的场合，但性能通常不如专门为虚拟化优化的适配器。
+>
+> **rtl8139** - 模拟 Realtek 8139 网络卡的适配器，适合旧操作系统或特定兼容性需求，性能较低。
+>
+> **vmxnet3** - 由 VMware 提供，专为 VMware 虚拟环境优化的网络适配器，提供高性能和低主机 CPU 使用率。
+
+#### 选择virtio-net，开机后没有网络
+
+因为没有安装虚拟网卡驱动，操作步骤
+
+1. 右键此电脑 - 管理 - 设备管理器
+2. 右侧找到其他设备 - 右键以太网控制器 - 更新驱动程序 - 浏览我的电脑以查找驱动程序
+3. 浏览 - 选择 virtio-win-0.1.248/NetKVM/w10/ - 确定
+4. 勾选包括子文件夹 - 下一步
+5. 等待安装完成
+
+#### 访问共享文件夹
 
 创建好win10虚拟机后，在网络中可以发现TOWER，但是无法打开，提示`Windows无法访问\\TOWER`。
 
 在`组策略`中启用`启用不安全的来宾登录`，即可正常访问，操作方法如下：
 
-按`window+R` 输入 `gpedit.msc` 来启动本地组策略编辑器。依次点击计算机配置-管理模板-网络-Lanman工作站，在右侧找到“启用不安全的来宾登录”，双击“启用不安全的来宾登录”，将其状态修改为“已启用”并确定。
+1. 按`window+R` 输入 `gpedit.msc` 来启动本地组策略编辑器
+2. 依次点击计算机配置 - 管理模板 - 网络 - Lanman工作站
+3. 在右侧找到“启用不安全的来宾登录”，双击“启用不安全的来宾登录”，将其状态修改为“已启用”并确定
+
+
 
 ### 软路由
 
