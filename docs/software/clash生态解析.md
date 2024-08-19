@@ -46,6 +46,8 @@
 
 openclash：openwrt上的插件，通过web操作，可以增删订阅链接，功能上更加接近桌面客户端
 
+openwrt-Mihomo：
+
 ShellCrash：命令行界面的客户端，https://github.com/juewuy/ShellCrash
 
 
