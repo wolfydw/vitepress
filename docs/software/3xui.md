@@ -1,3 +1,5 @@
+最后更新时间：2024年8月19日
+
 ## 3x-ui
 
 项目地址：https://github.com/MHSanaei/3x-ui
@@ -32,3 +34,19 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/VPS-Optimizer/main/
 > [!note]什么是BBRv3？
 >
 > BBRv3 是一种由谷歌开发的 TCP 拥塞控制算法，用于提高网络传输效率和降低延迟。相较于之前的版本，BBRv3 在处理丢包和拥塞方面有更好的表现，能够在网络条件不佳时仍然保持较高的传输速度。
+
+### 配置节点
+
+方法自行Google，这里只记录各种配置方案的被封锁情况
+
+**vless + tls**
+
+Flow：无，tls使用Let's Encrypt证书
+
+截止2024.8.19，可以正常使用
+
+**vless + reality**
+
+~~Flow：xtls-rprx-vision，偷yahoo的证书，~~
+
+~~封的死死的~~
