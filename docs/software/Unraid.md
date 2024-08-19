@@ -316,6 +316,8 @@ services:
 >
 > 虚拟机因为有虚拟网卡，分配到了独立的内网ip，所以还需要单独配置代理。
 
+
+
 #### 使用curl测试代理服务器正常工作
 
 例如局域网内ip为192.168.0.105的设备开启了局域网共享，端口为7890，可以在终端输入
@@ -352,24 +354,61 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
 安装`Unassigned Devices` 和 `Unassigned Devices Plus`插件
 
-> 参考资料
->
-> [unraid docker加速-修改unraid docker的镜像源（含国内网易等镜像源） - UnRaid - 我爱帮助网 (52help.net)](https://www.52help.net/unraid/251.mhtml)
+
 
 ### 创建虚拟浏览器
 
-虚拟浏览器有很多，例如neko等等
+虚拟浏览器有很多，例如docker kasmweb/chrome、neko等等
+
+#### docker_chromium
+
+项目地址：https://hub.docker.com/r/kasmweb/chrome
+
+使用docker compose进行安装
+
+```
+services:
+  chrome:
+    image: kasmweb/chrome:1.14.0
+    shm_size: 2048m
+    ports:
+      - "6901:6901"
+    environment:
+      VNC_PW: "loveyou0207"
+      LANG: "zh_CN.UTF-8"
+      TZ: "Asia/Shanghai"
+    tty: true
+    stdin_open: true
+```
+
+> [!warning] frp失败
+>
+> ```toml
+> # frpc.toml
+> [[proxies]]
+> name = "chromiumhttps"
+> type = "https"
+> localIP = "127.0.0.1"
+> localPort = 6901
+> customDomains = ["chromium.xxx.xxx"]
+> # if not empty, frpc will use proxy protocol to transfer connection info to your local service
+> # v1 or v2 or empty
+> transport.proxyProtocolVersion = "v2"
+> ```
+>
+> ```bash
+> # docker logs
+> 2024-08-19 10:02:54,389 [INFO] websocket 131: got client connection from 172.26.0.1
+> 2024-08-19 10:02:54,389 [DEBUG] websocket 131: non-SSL connection disallowed
+> 2024-08-19 10:02:54,389 [DEBUG] websocket 131: No connection after handshake
+> 2024-08-19 10:02:54,389 [DEBUG] websocket 131: handler exit
+> ```
+
+
 
 #### neko
 
-Neko不只是一个简单的私密浏览器，它的独特之处在于：
-
-1. **多用户体验**：支持多人同时在线，无论是家人还是同事，都可以在同一平台上共享和协作。
-2. **丰富应用支持**：除了浏览器，还可以运行如VLC等多种Linux应用，满足娱乐和工作的需求。
-3. **社交和互动**：提供实时交流和协作功能，创造了一种新型的线上社交体验。
-4. **隐私和安全**：所有操作都在安全的容器内完成，保护你的数据和隐私。
-5. **个性化定制**：用户可以根据个人需要定制Neko，适用于个人娱乐、团队协作或教育培训等多种场景。
-6. **文件传输**: 你可以在和好友家人互动的同时，实现文件互传
+Neko是一个在 docker 中运行的虚拟浏览器，可以在浏览器中跑 chrome 或者 firefox，支持声音回传，支持多用户同时访问，且可以聊天。**但是只适合在电脑上用，移动端没有做适配，基本无法使用**
 
 项目地址：https://github.com/m1k1o/neko
 
@@ -410,7 +449,23 @@ services:
 >
 > 官方的完整参数列表：https://neko.m1k1o.net/#/getting-started/configuration
 
+> [!note]参考资料
+>
+> [Neko:运行在云上的虚拟浏览器 | 资源管理器博客 - 我的技术管理 (zyglq.cn)](https://www.zyglq.cn/posts/neko-remote-browser.html)
 
+> [!warning]尝试frp失败
+>
+> ```toml
+> # frpc.toml
+> [[proxies]]
+> name = "neko_udp"
+> type = "udp"
+> localIP = "172.17.0.1"
+> localPort = 52000-52100
+> remotePort = 52000-52100
+> ```
+>
+> 失败原因：作者在 [Release v0.52.0](https://github.com/fatedier/frp/releases/tag/v0.52.0) 中删除了range ports的支持，猜测使用0.52.0之前的版本就行，我喜欢追新，所以并未尝试老版本
 
 ### 创建win10虚拟机
 
