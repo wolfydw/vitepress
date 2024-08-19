@@ -1,4 +1,13 @@
+最后更新时间：2024年8月19日
+
+当前最新版为：0.60.0
+
+等待补充的内容
+
+- frp各种配置方式
+
 ## 简介
+
 最好的内网穿透工具，没什么好解释的了
 
 github：https://github.com/fatedier/frp
@@ -7,11 +16,59 @@ github：https://github.com/fatedier/frp
 
 dockerhub：https://hub.docker.com/r/snowdreamtech/frpc
 
-## 安装frps
-克隆源码并给权限
+
+
+## 简易安装 & 使用说明
+
+1. 下载符合操作系统 / 硬件架构的 frp 文件版本，解压后将 frps 复制到服务器，将 frpc 复制到客户端
+
 ```
-chmod +x ./frps
+wget https://github.com/fatedier/frp/releases/download/v0.60.0/frp_0.60.0_linux_amd64.tar.gz
+tar -xzvf frp_0.60.0_linux_amd64.tar.gz
 ```
+
+> [!important]如何选择文件版本？
+>
+> frp文件名结构为 `程序名称_版本号_操作系统_硬件架构` ，例如你有一台运行在arm64架构的安卓系统，则应该下载 frp_0.60.0_android_arm64.tar.gz
+>
+> 我们可以使用 `uname` 查询当前设备的操作系统，使用 `uname -m` 查询当前设备的硬件架构，例如
+>
+> ```
+> root@Tower:~# uname
+> Linux
+> root@Tower:~# uname -m
+> x86_64
+> ```
+>
+> 根据输出结果，我这台机器应该使用 frp_0.60.0_linux_amd64.tar.gz
+
+
+
+2. 编写配置文件（具体见后文），目前支持的文件格式包括 TOML/YAML/JSON，旧的 INI 格式仍然支持，但已经不再推荐。
+
+3. 给运行权限并启动服务器
+   ````
+   chmod +x ./frps
+   ./frps -c ./frps.toml
+   ````
+
+4. 给运行权限并启动启动客户端
+   ````
+   chmod +x ./frpc
+   ./frpc -c ./frpc.toml
+   ````
+
+官方教程：https://gofrp.org/zh-cn/docs/setup/
+
+## 编辑配置文件
+
+完整配置文件：https://github.com/fatedier/frp?tab=readme-ov-file#configuration-files
+
+
+
+以下待编辑
+
+
 
 **编辑frps.toml，写入以下内容**
 
