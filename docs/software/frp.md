@@ -62,29 +62,73 @@ tar -xzvf frp_0.60.0_linux_amd64.tar.gz
 
 ## 编辑配置文件
 
-完整配置文件：https://github.com/fatedier/frp?tab=readme-ov-file#configuration-files
-
-
-
-以下待编辑
-
-
-
-**编辑frps.toml，写入以下内容**
+### 简易配置
 
 ```
-bindPort = 7000 # 与frpc.toml中的serverPort保持一致
+# frps.toml 简易配置
+bindPort = 7000 
 vhostHTTPPort = 8080
-vhostHTTPSPort = 8443
 ```
 
-> 服务器端配置解释：
+> [!note]服务器端配置解释
 >
-> 1. **bindPort (7000)**: 这个端口用于 FRP 服务器端和客户端之间的通信。也就是说，FRP 客户端需要将其 `serverPort` 设置为此端口来连接到 FRP 服务器。
+> **bindPort** ：这个端口用于 FRP 服务器端和客户端之间的通信。
 >
-> 2. **vhostHTTPPort (8080)**: 这个端口用于处理所有通过 HTTP 协议转发的请求。如果您在 FRP 客户端配置中使用了 `type` 为 `"http"` 的代理，并设置了 `customDomains`，这些 HTTP 请求将通过此端口进行路由。
+> **vhostHTTPPort** ：这个端口用于处理所有通过 HTTP 协议转发的请求。如果您在 FRP 客户端配置中使用了 `type` 为 `"http"` 的代理，并设置了 `customDomains`，这些 HTTP 请求将通过此端口进行路由。
 
-## 使用 systemd
+```
+# frpc.toml 简易配置
+serverAddr = "x.x.x.x" # 服务器ip
+serverPort = 7000 # 与frps.toml中的bindPort保持一致
+
+[[proxies]]
+name = "web"
+type = "http"
+localPort = 8063
+customDomains = ["www.yourdomain.com"] # DNS解析至服务器ip
+
+[[proxies]]
+name = "web2"
+type = "tcp"
+localPort = 8063
+remotePort = 9001  # 指定远程端口，客户端连接此端口将被转发到 localPort
+```
+
+采用以上配置实现了http和tcp转发
+
+将`www.yourdomain.com`域名的DNS解析至frps所在服务器后，当你访问`www.yourdomain.com:8080`，会转发至客户端的8063端口；
+
+访问`www.yourdomain.com:9091`，会转发至客户端的8063端口。
+
+
+
+### 开启网页管理面板
+
+```
+# frps.toml 开启网页管理面板
+webServer.addr = "0.0.0.0"
+webServer.port = 7500
+webServer.user = "user"
+webServer.password = "password"
+```
+
+
+
+### 开启 token 验证
+
+```
+# frps.toml 开启token验证
+auth.method = "token"
+auth.token = "xxxxxxxxxx"
+```
+
+
+
+想学习更多配置方案，可以参考官方完整配置文件：https://github.com/fatedier/frp?tab=readme-ov-file#configuration-files
+
+
+
+## 使用 systemd 开机自启动
 
 > 在 Linux 系统下，使用 `systemd` 可以方便地控制 frps 服务端的启动、停止、配置后台运行以及开机自启动
 
@@ -135,45 +179,11 @@ sudo systemctl status frps
 sudo systemctl enable frps
 ```
 
-## 安装frpc
-**下载 frpc 和 frpc.toml，并给权限**
-```
-chmod +x ./frpc
-```
-**编辑 frpc.toml**
-```
-serverAddr = "x.x.x.x"
-serverPort = 7000
+**也可以使用 systemd 管理 frpc 服务，设置方法同上**
 
-[[proxies]]
-name = "web"
-type = "http"
-localPort = 80
-customDomains = ["www.yourdomain.com"]
 
-[[proxies]]
-name = "web2"
-type = "tcp"
-localPort = 8063
-remotePort = 9001  # 指定远程端口，客户端连接此端口将被转发到 localPort
-```
-采用以上配置，并将`www.yourdomain.com`域名的DNS解析至frps所在服务器时，
 
-当你访问`www.yourdomain.com:8080`，会中转至客户端的80端口；
-
-访问`www.yourdomain.com:9091`，会中转至客户端的8063端口。
-
-**运行frpc**
-
-```
-./frpc -c frpc.toml  
-```
-
-**也可以使用使用 systemd 管理 frpc 服务**
-
-参考上面frps的相关内容
-
-**设置 BasicAuth 鉴权**
+## 设置 BasicAuth 鉴权
 
 由于所有客户端共用一个 frps 的 HTTP 服务端口，任何知道你的域名和 URL 的人都能访问到你部署在内网的服务，但是在某些场景下需要确保只有限定的用户才能访问。
 
