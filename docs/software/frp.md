@@ -20,7 +20,9 @@ dockerhub：https://hub.docker.com/r/snowdreamtech/frpc
 
 ## 简易安装 & 使用说明
 
-1. 下载符合操作系统 / 硬件架构的 frp 文件版本，解压后将 frps 复制到服务器，将 frpc 复制到客户端
+1. 下载符合操作系统 / 硬件架构的 frp 文件版本
+
+   解压后将 frps 复制到服务器，将 frpc 复制到客户端
 
 ```
 wget https://github.com/fatedier/frp/releases/download/v0.60.0/frp_0.60.0_linux_amd64.tar.gz

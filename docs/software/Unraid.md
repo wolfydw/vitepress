@@ -26,6 +26,18 @@ N305：10089
 >
 > 接口：USB3.2×5/USB2.0×1/耳机接口×1/以太网卡x2/HDMIx 1/DPx 1/Type-Cx1/MicroSD读卡器x1
 
+> [!note]如何检查设备情况
+>
+> 可以使用 `lspci` 命令来显示PCI总线上的设备信息，也可以加上`grep` 来快速筛选
+>
+> 例如以下命令可以快速查询系统使用的网卡型号
+>
+> ```
+> lspci | grep Ethernet
+> ```
+>
+> PS：grep是"Global Regular Expression Print"的缩写， 翻译成中文是“全局正则表达式打印”
+
 ### 系统选择
 
 Unraid
