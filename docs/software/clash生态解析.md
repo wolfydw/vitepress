@@ -218,6 +218,50 @@ sudo xattr -d com.apple.quarantine
 2022-08-23 12:27:12 OpenClash 开始启动...
 ```
 
+
+
+## 规则转换
+
+### 推荐使用substore
+
+*这里摘取官方仓库的介绍*：
+
+> Advanced Subscription Manager for QX, Loon, Surge, Stash and Shadowrocket.
+
+项目地址：https://github.com/sub-store-org/Sub-Store
+
+官方教程：[Sub-Store 相关教程 (notion.site)](https://xream.notion.site/Sub-Store-abe6a96944724dc6a36833d5c9ab7c87)
+
+Docker compose.yml
+
+```
+version: '3.8'
+services:
+  sub-store:
+    image: xream/sub-store
+    container_name: sub-store
+    restart: always
+    volumes:
+      - ./data:/opt/app/data
+    environment:
+      - SUB_STORE_CRON=0 0 * * *
+      - SUB_STORE_FRONTEND_BACKEND_PATH=/2cXaAxRGfddmGz2yx1wA⁠
+    ports:
+      - "3001:3001"
+    stdin_open: true
+    tty: true
+```
+
+> [important] 使用说明
+>
+> 通过前端地址 + 后端地址来快速访问面板：http://127.0.0.1:3001?api=http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA⁠
+>
+> 意思是 后端地址为 http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA
+>
+> 简单验证一下 http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA/api/utils/env 可以看到版本信息，同样此 URL 也可以作为健康检查的 URL
+>
+> PS：如果设置了反代，那前后端都要用https
+
 ## 四、Clash规则写法规则
 
 1. Vless 规则 (**Meta 内核**) - 包含 TCP(XTLS) 、WS和gRPC 的三种协议。
