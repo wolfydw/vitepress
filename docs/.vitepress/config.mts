@@ -16,7 +16,8 @@ export default defineConfig({
   themeConfig: {
     nav: [
 //      { text: '主页', link: '/' },
-      { text: '主页', link: '/' }
+      { text: '主页', link: '/' },
+      { text: '初中化学', link: '/初中化学/' }
     ],
 
     lastUpdated: true, 
