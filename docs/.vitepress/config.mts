@@ -10,7 +10,8 @@ export default defineConfig({
   description: "",
   base: '/',
   markdown: {
-    math: true
+    math: true,
+    lineNumbers: true
   },
 
   themeConfig: {
