@@ -12,9 +12,29 @@
 - appstorrent  俄罗斯的网站，资源很多，更新也很快。无需登录，直链下载。有些热门软件会受版权影响则不提供下载，但是可以去其他地方找~
 - macserialiunkie 8国外的论坛，时常会有一手破解资源。非常不错，可以作为兜底去逛逛。上面这些网站有些可能得挂梯子才能访问，还有一些更新速度慢，吃相难看的网站就不分享了~
 
+
+
 ## brew
 
-MacOS专用的包管理器
+MacOS专用的包管理器，可以在 https://brew.sh/ 搜索有哪些应用程序
+
+
+
+Applite： [Homebrew](https://brew.sh/) GUI，免费的开源项目。
+
+已经安装的brew应用，都将出现在 Applite 中。手动安装的其他应用程序（例如从 DMG 或 PKG 文件安装），可以通过强制重新安装将它们添加到 Applite 中。
+
+
+
+项目地址：https://aerolite.dev/applite
+
+安装包安装或一键安装
+
+```
+brew install --cask applite
+```
+
+
 
 ## 软件推荐
 
