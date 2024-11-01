@@ -1,4 +1,4 @@
-
+更新时间：2024.11.1
 
 ## 背景
 
@@ -8,7 +8,7 @@
 
 ## 快速上手
 
-官方文档：https://v1.vuepress.vuejs.org/zh/guide/getting-started.html
+官方文档：https://vitepress.dev/zh/guide/getting-started
 
 ### 安装
 
@@ -85,7 +85,59 @@
 └─ package.json
 ```
 
-### 启动
+### 编辑配置文件
+
+```
+# 以下是宝宝的配置文件
+import { defineConfig } from 'vitepress'
+
+// https://vitepress.dev/reference/site-config
+export default defineConfig({
+  title: "宝宝的成长记录",
+  description: "",
+  themeConfig: {
+    // https://vitepress.dev/reference/default-theme-config
+    nav: [
+      { text: '主页', link: '/' },
+      { text: '成长记录', link: '/index' }
+    ],
+
+    lastUpdated: true, 
+
+    outline: 'deep',
+    outlineTitle: '目录',
+
+    search: {provider: 'local'}, // 全局搜索
+
+    sidebar: [
+      {
+        text: '0岁',
+        items: [
+          { text: '2024年3月', link: '/202403' },
+          { text: '2024年6月', link: '/202406' },
+          { text: '2024年7月', link: '/202407' },
+          { text: '2024年8月', link: '/202408' },
+          { text: '2024年9月', link: '/202409' },
+          { text: '2024年10月', link: '/202410' }
+        ]
+      }
+    ],
+
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2024 - 情歌'
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+    ]
+  }
+})
+```
+
+## 部署
+
+### vitepress 在本地构建和部署
 
 ```
 npm run docs:dev # 开发模式，支持热更新
@@ -96,4 +148,32 @@ npm run docs:build # 构建，生成静态文件
 npm run docs:preview # 正式发布
 ```
 
-配置文件：`./package.json`
+构建后，生成的静态文件默认在`.vitepress/dist`目录中
+
+发布后，将会在 `http://localhost:8080` 启动服务。
+
+### vitepress在本地构建，在服务器上部署
+
+1. 本地构建，生成静态文件
+   ```
+   npm run docs:build
+   ```
+
+2. 将本地静态文件复制到服务器上，例如我是将本地`.vitepress/dist`目录下的所有静态文件复制到了服务器的`/root/yangbaobao`目录下
+
+3. 创建一个`nginx`的`docker-compose.yml`并启动
+   ```
+   version: '3'
+   
+   services:
+     vitepress-server:
+       image: nginx:latest
+       volumes:
+         - /root/yangbaobao:/usr/share/nginx/html
+       ports:
+         - '5173:80'
+       restart: always
+   ```
+
+4. 域名DNS解析值服务器，并设置反代和SSL
+

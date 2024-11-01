@@ -44,7 +44,11 @@ tar -xzvf frp_0.60.0_linux_amd64.tar.gz
 >
 > 根据输出结果，我这台机器应该使用 frp_0.60.0_linux_amd64.tar.gz
 
-
+> [TIPS] 无法访问GitHub时
+>
+> 可以通过国内版gitee拉取frp
+>
+> 项目地址：https://gitee.com/deng-meiqing/frp/releases/
 
 2. 编写配置文件（具体见后文），目前支持的文件格式包括 TOML/YAML/JSON，旧的 INI 格式仍然支持，但已经不再推荐。
 
