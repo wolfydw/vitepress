@@ -259,8 +259,32 @@ remote_port = 9001
 ## 出错的解决方案
 
 ### 排查流程
-1. systemctl status frps，查看 frps 服务的状态信息，包括是否正在运行、启动日志等
-2. netstat -tuln | grep 7000，检查7000端口是否被监听
+
+1. 确认frpc和frps的版本是否一致
+   **Docker**
+
+   ```
+   docker exec -it <容器号> frpc -v
+   ```
+
+   
+
+2. 检查日志
+   **Docker**
+
+   ```
+   docker logs <容器号>
+   ```
+
+   **systemd 服务**
+
+   ```
+   journalctl -u frps -f
+   ```
+
+3. systemctl status frps，查看 frps 服务的状态信息，包括是否正在运行、启动日志等
+
+4. netstat -tuln | grep 7000，检查7000端口是否被监听
 
 ### exec format error
 这个错误意味着你尝试运行的二进制文件不兼容你的操作系统架构，重新下载正确的版本就可以，一般来说小鸡都是linxu amd64构架，M系列的mac是darwin构架

@@ -177,3 +177,26 @@ npm run docs:preview # 正式发布
 
 4. 域名DNS解析值服务器，并设置反代和SSL
 
+**本地更新后，如何同步到服务器？**
+
+两个方法，一是将`.vitepress/dist`目录重新上传，二是使用`rsync`进行增量备份
+
+1. 在 macOS 和 VPS 上同时安装`rsync`，macOS是默认自带`rsync`的
+   ```
+   rsync --version # 查询版本
+   ```
+
+   ```
+   apt install rsync -y
+   ```
+
+2. 进入`.vitepress/dist`所在目录
+   ```
+   cd /path/.vitepress/dist
+   ```
+
+3. 进行增量备份
+
+   ```
+   rsync -avz -e "ssh -p 远程端口" --delete ./ vps_user@vps_ip:/远程目录/
+   ```
