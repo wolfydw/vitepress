@@ -224,7 +224,7 @@ services:
 
 ### 安装clash docker
 
-选择想要的clash版本，不同版本的config文件格式不一样
+目前仍在维护的只有mihomo，不推荐使用其他版本的clash
 
 > [!important]clash版本区别
 >
@@ -244,10 +244,10 @@ services:
 >
 > mihomo docker：https://hub.docker.com/r/metacubex/mihomo
 
-切换至`/mnt/user/appdata/clash/`
+切换至`/mnt/user/appdata/mihomo/`
 
 ```bash
-cd /mnt/user/appdata/clash/
+cd /mnt/user/appdata/mihomo/
 ```
 
 下载`config.yaml` 
@@ -264,29 +264,6 @@ nano docker-compose.yaml
 
 选择想要的clash版本并粘贴对应的compose内容
 
-**clash**
-
-```yaml
-services:
-  clash:
-    image: centralx/clash:1.18.0
-    container_name: clash
-    ports:
-      - "1234:80" # dashboard访问端口
-      - "7890:7890"
-      - "9090:9090"
-    volumes:
-      - "./config.yaml:/home/runner/.config/clash/config.yaml"
-    restart: unless-stopped
-    network_mode: bridge  # 明确指定使用桥接模式
-```
-
-> [!note]
->
-> 本镜像封装了 Clash 及 Clash Dashboard
->
-> 项目地址：https://hub.docker.com/r/centralx/clash
-
 
 
 **mihomo**
@@ -301,7 +278,6 @@ services:
       - '1234:80'
     network_mode: bridge
 
-  # optional
   meta:
     container_name: meta
     image: docker.io/metacubex/mihomo:Alpha
@@ -318,7 +294,11 @@ services:
 
 > [!note]
 >
+> metacubexd在线面板
+>
 > 项目地址：https://github.com/MetaCubeX/metacubexd
+>
+> 搭建完成后通过`http://域名:1234`访问
 >
 > compose文件根据项目介绍中的进行了一些改动
 
