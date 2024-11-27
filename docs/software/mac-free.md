@@ -1,6 +1,6 @@
 # MAC免费软件
 
-最后更新时间：2024年10月12日
+最后更新时间：2024年11月27日
 
 ## Mac破解软件下载站
 
@@ -20,19 +20,110 @@
 
 
 
-## brew
+## Homebrew
 
-MacOS专用的包管理器，可以在 https://brew.sh/ 搜索有哪些应用程序
+`Homebrew`是一款包管理工具，目前支持`macOS`和`Linux`系统。主要有四个部分组成: `brew`、`homebrew-core` 、`homebrew-cask`、`homebrew-bottles`。
+
+| 名称             | 说明                                  |
+| ---------------- | ------------------------------------- |
+| brew             | Homebrew 源代码仓库                   |
+| homebrew-core    | Homebrew 核心源                       |
+| homebrew-cask    | 提供 macOS 应用和大型二进制文件的安装 |
+| homebrew-bottles | 预编译二进制软件包                    |
+
+可以在官网 https://brew.sh/zh-cn/ 搜索有哪些应用程序
+
+### 命令行操作
+
+#### 安装 & 卸载 Homebrew
+
+安装脚本——GitHub
+
+```zsh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+安装脚本——国内镜像
+
+```zsh
+/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+```
+
+卸载脚本——国内镜像
+
+```zsh
+/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)"
+```
+
+#### 相关命令
+
+```zsh
+brew update # 更新 brew 和 所有软件包
+brew search package-name # 搜索软件包
+brew install package-name # 安装软件包
+brew uninstall package-name # 卸载软件包
+brew list # 查看已安装软件包列表
+brew cheanup # 清理过期的软件包和库文件
+brew --version # 查看homebrew的版本信息
+```
+
+### 切换国内源
+
+切换镜像源有三个库要切换：
+
+- brew.git
+- homebrew-core.git
+- homebrew-bottles
+
+1. 中科大源
+
+```shell
+# 替换brew.git:
+$ cd "$(brew --repo)"
+$ git remote set-url origin https://mirrors.ustc.edu.cn/brew.git
+
+# 替换homebrew-core.git:
+$ cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+$ git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git
+
+# 替换homebrew-bottles:
+$ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles' >> ~/.bash_profile
+$ source ~/.bash_profile
+
+# 应用生效:
+$ brew update
+```
+
+2. 清华大学源
+
+```shell
+# 替换brew.git:
+$ cd "$(brew --repo)"
+$ git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
+
+# 替换homebrew-core.git:
+$ cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+$ git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+
+# 替换homebrew-bottles:
+$ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles' >> ~/.bash_profile
+$ source ~/.bash_profile
+
+# 应用生效:
+$ brew update
+```
 
 
+
+### 第三方GUI
 
 Applite： [Homebrew](https://brew.sh/) GUI，免费的开源项目。
 
 已经安装的brew应用，都将出现在 Applite 中。手动安装的其他应用程序（例如从 DMG 或 PKG 文件安装），可以通过强制重新安装将它们添加到 Applite 中。
 
-
-
 项目地址：https://aerolite.dev/applite
+
+
 
 安装包安装或一键安装
 
