@@ -73,3 +73,8 @@ Folder number: 1
 File number: 1
 ```
 
+## 通过crontab使用obsutil
+
+`crontab -e`，添加以下`path`
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
