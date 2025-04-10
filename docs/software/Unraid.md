@@ -132,8 +132,8 @@ https://unraid.net
    tee /etc/docker/daemon.json <<- EOF
    {
      "proxies": {
-       "http-proxy": "http://127.0.0.1:7890",
-       "https-proxy": "http://127.0.0.1:7890",
+       "http-proxy": "http://192.168.0.108:7890",
+       "https-proxy": "http://192.168.0.108:7890",
        "no-proxy":  "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
      }
    }
@@ -153,8 +153,8 @@ https://unraid.net
 
 3. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
    ```json
-   HTTP Proxy: http://127.0.0.1:7890
-   HTTPS Proxy: http://127.0.0.1:7890
+   HTTP Proxy: http://192.168.0.108:7890
+   HTTPS Proxy: http://192.168.0.108:7890
    No Proxy: localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
    ```
 
@@ -181,14 +181,19 @@ https://unraid.net
    mkdir -p /etc/docker
    tee /etc/docker/daemon.json <<-'EOF'
    {
-   "registry-mirrors": ["https://hub.ydw.cool"]
+   "registry-mirrors": [
+   	"https://docker-0.unsee.tech",
+   	"https://docker-cf.registry.cyou",
+   	"https://docker.1panel.live",
+   	"https://hub.ydw.cool"
+   ]
    }
    EOF
    ```
-
+   
    第一行代码是创建一个 /etc/docker 目录
    添加一个 daemon.json 的文件并填写以下参数内容
-
+   
 4. 重启docker让设置生效
 
    ```bash
@@ -198,12 +203,36 @@ https://unraid.net
 5. 用`docker info`命令检查是否修改成功，如出现以下代码说明修改成功
    ```bash
     Registry Mirrors:
+     https://docker-0.unsee.tech/
+     https://docker-cf.registry.cyou/
+     https://docker.1panel.live/
      https://hub.ydw.cool/
    ```
 
-> [!WARNING]
+> [!tip]
 >
-> 本方法下载小型镜像没有问题，当下载500M或以上镜像时，疑似会被限速，原因不明。所以推荐使用方法一为docker加速
+> 1. 可以从 https://www.coderjia.cn/archives/dba3f94c-a021-468a-8ac6-e840f85867ea 获取目前国内可用的Docker镜像源
+> 2. 我自建的镜像源下载小型镜像没有问题，当下载500M或以上镜像时，疑似会被限速，原因不明。所以推荐使用方法一为docker加速
+
+
+
+#### 方法三：两个一起用
+
+```
+{
+  "proxies": {
+    "http-proxy": "http://192.168.0.108:7890",
+    "https-proxy": "http://192.168.0.108:7890",
+    "no-proxy": "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  },
+  "registry-mirrors": [
+    "https://docker-0.unsee.tech",
+    "https://docker-cf.registry.cyou",
+    "https://docker.1panel.live",
+    "https://hub.ydw.cool"
+  ]
+}
+```
 
 
 
