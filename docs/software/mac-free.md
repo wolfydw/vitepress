@@ -16,6 +16,8 @@
 
 ## Adobe系列
 
+
+
 最新破解是由sice发布的Adobe 2024 Patcher，分为No Account Patcher离线补丁和With Account Patcher在线补丁，在 https://foxirj.com/adobe-patcher.html 可以下载
 
 
