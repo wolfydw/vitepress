@@ -29,6 +29,8 @@ services:
       - USER_GID=1000
       - GITEA__database__DB_TYPE=sqlite3
       # 可选：配置邮件服务器、域名等其他环境变量
+      - GITEA__markup.markdown__ENABLE_MATH=true
+      # 可选：启用 KaTeX 支持
     volumes:
       - ./data:/data
       - ./config:/etc/gitea
@@ -83,8 +85,6 @@ echo "GITEA_RUNNER_TOKEN=你的注册令牌" > .env
 docker-compose up -d
 ```
 
-
-
 ### 将项目从 GitHub 迁移到 Gitea
 
  以迁移 VitePress 项目为例要，将项目从 GitHub 迁移到自建的 Gitea，需要执行以下步骤：
@@ -117,60 +117,41 @@ git remote -v
 
 2. **将代码推送到 Gitea**
 
-确保您的本地代码已更新，然后推送到 Gitea：
+   提交本地更改
 
 ```
-# 确保本地更改已提交
 git add .
 git commit -m "准备迁移到 Gitea"
+```
 
-# 推送所有分支和标签到 Gitea
-git push gitea --all
-git push gitea --tags
+推送 main 分支到 Gitea (步骤1中已经将 gitea 设置为 origin)
+
+```
+git push -u origin main
+```
+
+> `-u` 参数会同时设置跟踪关系，这样一次性解决两个问题:
+>
+> - 将代码推送到 Gitea
+>
+> - 设置 main 分支跟踪 origin/main
+
+再次验证分支跟踪状态
+
+```
+(base) yangdawei@ydw vitepress % git branch -vv
+* main 3baa04d [origin/main] 准备迁移到 Gitea
+```
+
+今后如果想推送到 GitHub，需要明确指定
+
+```
+git push github main
 ```
 
 
 
-3. 配置部署设置（如果需要）
-
-如果您在 GitHub 上配置了自动部署，需要在 Gitea 上重新配置：
-
-1. **创建 Gitea Actions 工作流**：在项目根目录创建 `.gitea/workflows/deploy.yml` 文件
-
-```
-yaml
+3. 待补充，迁移 workflow 相关内容
 
 
-复制
-name: Deploy VitePress
 
-on:
-  push:
-    branches: [main] # 或者您的主分支名称
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build site
-        run: npm run docs:build # 或您的构建命令
-        
-      # 添加部署步骤，根据您的 Gitea 部署目标配置
-```
-
-## 4. 更新配置文件
-
-检查并更新项目中可能包含 GitHub 特定引用的配置文件：
-
-1. 修改 `package.json` 中的仓库 URL
-2. 更新 VitePress 配置（`docs/.vitepress/config.js` 或类似）中的链接
