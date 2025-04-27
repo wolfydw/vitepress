@@ -152,8 +152,8 @@ jobs:
 ### 操作步骤
 
 1. 修改GitHub page默认域名，位置在`Settings -> Pages -> Build and deployment -> Custom domain`，填写你的域名，点`Save`保存。例如我的域名是`ydw.cool`
-2. 域名DNS设置A记录，指向vps的ip
-3. 在vps上搭建`nginx proxy manager`，将域名反代到`https://185.199.108.153:443`
+2. 域名DNS设置A记录，将@和www都指向vps的ip
+3. 在vps上搭建`nginx proxy manager`，将顶级域名反代到`https://185.199.108.153:443`，www子域名反代到`wolfydw.github.io`
 
 
 

@@ -88,10 +88,18 @@ sed -i 's|^ExecStart=.*|& --disable-command-execute --disable-auto-update --disa
 
 ## 账单信息展示
 
-https://github.com/nezhahq/nezha/pull/425
+在线生成JSON，粘贴到公开备注中使用
+
+https://nezhainfojson.pages.dev/
 
 
 
 ## 美化面板
 
 https://github.com/hamster1963/nezha-dash
+
+
+
+## 参考
+
+https://blog.rstary.com/tz
