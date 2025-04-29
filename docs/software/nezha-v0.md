@@ -86,6 +86,18 @@ sed -i 's|^ExecStart=.*|& --disable-command-execute --disable-auto-update --disa
 
 
 
+## 卸载客户端（agent）
+
+运行一键删除命令
+
+```
+systemctl stop nezha-agent.service && rm -f /etc/systemd/system/nezha-agent.service && rm -rf /opt/nezha/agent
+```
+
+然后去面板删除离线的服务器即可
+
+
+
 ## 账单信息展示
 
 在线生成JSON，粘贴到公开备注中使用
@@ -97,6 +109,12 @@ https://nezhainfojson.pages.dev/
 ## 美化面板
 
 https://github.com/hamster1963/nezha-dash
+
+
+
+## 自定义面板
+
+https://www.nodeseek.com/post-311746-1
 
 
 
