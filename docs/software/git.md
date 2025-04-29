@@ -1,6 +1,6 @@
 ## 背景
 
-为了方便多端编辑与同步，这里采用git进行管理
+为了方便多端编辑、同步与溯源，采用 git 进行重要文档的管理
 
 
 
@@ -30,13 +30,109 @@
 git init
 ```
 
-**创建.gitignore文件**：使用`touch .gitignore`（Mac）或`nano .gitignore`（Unix-like）命令创建`.gitignore`文件，在文件内容中添加规则：
+**创建.gitignore文件**：使用`touch .gitignore`或`nano .gitignore`命令创建`.gitignore`文件，在文件内容中添加规则：
 
 ```
-*.DS_Store # 忽略所有.DS_Store文件
-node_modules
-docs/.vitepress/cache
-docs/.vitepress/dist
+# macOS specific files
+# macOS 特定文件
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails cache files
+# 缩略图缓存文件
+._*
+Thumbs.db
+ehthumbs.db
+
+# Folder config file (Windows)
+# 文件夹配置文件 (Windows)
+Desktop.ini
+
+# Recycle Bin folder (Windows)
+# 回收站文件夹 (Windows)
+$RECYCLE.BIN/
+
+# IDE and Editor specific files/folders
+# IDE 和编辑器特定文件/文件夹
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+*.sublime-workspace
+*.sublime-project
+
+# Vim swap files and backups
+# Vim 交换文件和备份文件
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+
+# Build output directories
+# 构建输出目录
+build/
+dist/
+out/
+target/
+bin/
+obj/
+
+# Dependency directories (very important for Node.js/npm/yarn/pnpm etc.)
+# 依赖包目录 (非常重要，例如 Node.js/npm/yarn/pnpm 等项目的依赖)
+node_modules/
+bower_components/
+jspm_packages/
+vendor/
+
+# Log files
+# 日志文件
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data / Cache
+# 运行时数据 / 缓存
+.npm/
+.yarn/cache
+.yarn/plugnplay
+.pnp.*
+.pnpm-store/
+__pycache__/
+*.pyc
+*.pyo
+*.class
+
+# Environment variables file (NEVER commit secrets!)
+# 环境变量文件 (切勿提交敏感信息!)
+.env
+.env.*
+# You might want to keep example/template files
+# 但你可能想要保留示例或模板文件
+!.env.example
+!.env.template
+
+# OS generated files
+# 操作系统生成的文件
+.config
+*.stackdump
+
+# Temporary files
+# 临时文件
+*.tmp
+*.temp
+
+# Compressed files (uncomment if you don't want archives in repo)
+# 压缩文件 (如果不想将存档文件加入仓库，请取消注释)
+# *.zip
+# *.tar.gz
+# *.rar
 ```
 
 **添加文件到暂存区**：使用`git add`命令来添加文件到Git暂存区。如果你想添加当前目录下的所有文件（不包括.gitignore中指定的文件），可以使用`.`代表当前目录：
