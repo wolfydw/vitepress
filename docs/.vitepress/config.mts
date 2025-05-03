@@ -18,7 +18,7 @@ export default defineConfig({
     nav: [
 //      { text: '主页', link: '/' },
       { text: '主页', link: '/' },
-      { text: '初中化学', link: '/初中化学/' }
+      { text: '软件', link: '/software/' }
     ],
 
     lastUpdated: true, 

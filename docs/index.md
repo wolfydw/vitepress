@@ -5,11 +5,11 @@ layout: home
 hero:
   name: "杨达伟的知识库"
   text: ""
-  tagline: "一个略懂计算机的初中老师"
+  tagline: "一个略懂计算机的补习老师"
   actions:
     - theme: alt # brand
-      text: 初中化学
-      link: /初中化学/
+      text: 软件使用
+      link: /software/
     - theme: alt
       text: vitepress搭建
       link: /vitepress搭建/
