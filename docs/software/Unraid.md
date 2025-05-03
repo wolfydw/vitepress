@@ -1,14 +1,17 @@
-## 背景
+# Unraid使用记录
 
-时间：2024年7月30日
+最后更新时间：2025年05月03日
 
-目前mtphoto部署在macmini上，导致macmini的硬盘吃紧
+添置了一台小主机来跑一些个人项目，一些使用记录如下
 
-而且quest2激活和使用需要一个旁路由来提供科学上网环境
+**主要项目**
 
-所以打算布置一台小主机，来跑mtphoto和clash
+- mtphoto
+- mihomo
 
-### 小主机选择
+
+
+## 小主机选择
 
 通过查询benchmark分数：[PassMark - CPU Benchmarks - List of Benchmarked CPUs](https://www.cpubenchmark.net/cpu_list.php)
 
@@ -18,7 +21,9 @@ N305：10089
 
 选择购买中柏N305
 
-> [!NOTE]配置如下
+> [!NOTE]
+>
+> **配置如下**
 >
 > 内存：插槽一个，支持笔记本DDR4 3200
 >
@@ -26,7 +31,9 @@ N305：10089
 >
 > 接口：USB3.2×5/USB2.0×1/耳机接口×1/以太网卡x2/HDMIx 1/DPx 1/Type-Cx1/MicroSD读卡器x1
 
-> [!note]如何检查设备情况
+> [!note]
+>
+> **如何检查设备情况**
 >
 > 可以使用 `lspci` 命令来显示PCI总线上的设备信息，也可以加上`grep` 来快速筛选
 >
@@ -52,15 +59,14 @@ https://unraid.net
 
 下载：[UNRAID 6.11.5 中文集成常用插件开心版 - 米多贝克&米多网络工程 (mi-d.cn)](https://mi-d.cn/4293)
 
-> [!NOTE]开心版与官网版的区别
+> [!NOTE]
 >
-> 1.免费
+> **开心版与官网版的区别**
 >
-> 2.替换了官方的NTP服务器为国内可正常访问的NTP服务器，默认时区也改为中国北京
->
-> 3.默认简体中文界面，集成 English, 繁体中文, 简体中文 方便大陆和港澳台用户使用
->
-> 4.集成大量常用插件上手更加简单
+> 1. 免费
+>2. 替换了官方的NTP服务器为国内可正常访问的NTP服务器，默认时区也改为中国北京
+> 3. 默认简体中文界面，集成 English, 繁体中文, 简体中文 方便大陆和港澳台用户使用
+>4. 集成大量常用插件上手更加简单
 
 **闲鱼破解版**
 
@@ -86,11 +92,13 @@ https://unraid.net
 2. 进入网页GUI后，先设置NTP，系统时间不对无法申请到试用key
 3. 到`APPS`里搜索`简体中文语言包`安装，切换为中文
 
-> [!WARNING] 有关持久化数据
+> [!WARNING] 
+>
+> **有关持久化数据**
 >
 > 由于 Unraid 是运行在内存中的系统，只有存储盘和 U 盘能够持久化数据，因此，存放在系统其他位置（如 /etc、/tmp 等目录）的数据在系统重启后会被清空。
 >
-> unraid默认的docker持久化目录是/mnt/user/appdata/，建议为每一个docker容器、APP单独在appdata目录下建立一个子目录，例如clash容器的持久化数据可以放在/mnt/user/appdata/clash/下
+> unraid默认的docker持久化目录是`/mnt/user/appdata/`，建议为每一个docker容器、APP单独在`appdata`目录下建立一个子目录，例`如clash容器的持久化数据可以放在`/mnt/user/appdata/clash/`下
 
 
 
@@ -120,6 +128,8 @@ https://unraid.net
 > 因为daemon.josn文件在/etc中，重启后会被还原，需要重新设置代理。
 >
 > 如需要永久设置，可以修改`U盘/config/go`文件。
+
+3. 为`unraid`安装`mihomo`等代理程序，实现全局代理**（推荐）**
 
 #### 方法一：设置docker pull走代理
 
@@ -158,7 +168,8 @@ https://unraid.net
    No Proxy: localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
    ```
 
-   
+
+
 
 #### 方法二：使用docker镜像源
 
@@ -216,62 +227,19 @@ https://unraid.net
 
 
 
-#### 方法三：两个一起用
+#### 方法三：安装mihomo
 
-```
-{
-  "proxies": {
-    "http-proxy": "http://192.168.0.108:7890",
-    "https-proxy": "http://192.168.0.108:7890",
-    "no-proxy": "localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-  },
-  "registry-mirrors": [
-    "https://docker-0.unsee.tech",
-    "https://docker-cf.registry.cyou",
-    "https://docker.1panel.live",
-    "https://hub.ydw.cool"
-  ]
-}
-```
+[mihomo安装和配置](mihomo.md)
 
 
 
-### 让建立的docker容器走共享代理
 
-在已经建立好clash代理之后，可以在容器的compose中加入http代理相关的环境变量，例如
-
-```yaml
-services:
-  your-service:
-    image: your-docker-image
-    environment:
-      - HTTP_PROXY=http://127.0.0.1:7890
-      - HTTPS_PROXY=http://127.0.0.1:7890
-```
 
 
 
 ### 安装clash docker
 
-目前仍在维护的只有mihomo，不推荐使用其他版本的clash
 
-> [!important]clash版本区别
->
-> 原版clash：开源内核，已删库
->
-> Clash Premium：闭源内核，已删库
->
-> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
->
-> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
-
-> [!NOTE] clash-meta相关项目地址
->
-> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
->
-> MetaCubeX的github：https://github.com/MetaCubeX
->
-> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
 
 切换至`/mnt/user/appdata/mihomo/`
 

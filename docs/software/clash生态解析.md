@@ -18,6 +18,32 @@
 
 
 
+目前仍在维护的只有mihomo，不推荐使用其他版本的clash
+
+> [!NOTE]
+>
+> **clash版本区别**
+>
+> 原版clash：开源内核，已删库
+>
+> Clash Premium：闭源内核，已删库
+>
+> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
+>
+> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
+
+> [!NOTE] clash-meta相关项目地址
+>
+> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
+>
+> MetaCubeX的github：https://github.com/MetaCubeX
+>
+> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
+
+
+
+
+
 **套壳工具**
 
 - ClashX：MAC平台，作者yichengchen，已删库，最终版本1.118.1
