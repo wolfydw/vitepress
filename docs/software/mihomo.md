@@ -92,6 +92,8 @@
    systemctl daemon-reload # 重载 systemd
    systemctl enable mihomo # 允许服务自启动
    systemctl start mihomo # 启动服务
+   systemctl disable mihomo # 取消服务自启动
+   systemctl stop mihomo # 停止服务
    ```
 
 接下来访问对应的ip的控制面板`http://xxx.xxx.xxx.xxx/ui:9090`就可以控制你的`mihomo`代理了。
@@ -118,22 +120,19 @@ TUN模式会从网络层，将所有的数据都进行转发。(解决了一些�
 1. 编辑`/etc/sysctl.conf`文件
 
    ```
-   shell
-   vim /etc/sysctl.conf
+   nano /etc/sysctl.conf
    ```
-
+   
 2. 将以下代码取消注释
 
    ```
-   shell
    net.ipv4.ip_forward=1
    net.ipv6.conf.all.forwarding=1
    ```
-
+   
 3. 加载内核参数
 
    ```
-   shell
    sysctl -p
    ```
 
