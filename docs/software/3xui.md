@@ -43,3 +43,10 @@ Please set up the web base path (ip:port/webbasepath/): a # 输入面板路径
 **vless+ws+tls**
 
 主机和SNI填一个解析到服务器的域名，路径填 /ws ，数字证书填证书绝对路径，删除所有ALPN预设（ALPN处留空）
+
+
+
+## 参考资料
+
+https://www.youtube.com/watch?v=MfvNiI3xXb8
+https://naiyous.com/8689.html
