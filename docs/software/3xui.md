@@ -12,7 +12,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.
 
 按脚本提示输入初始化信息
 
-``` 
+``` bash
 Install/update finished! For security it's recommended to modify panel settings 
 Would you like to customize the panel settings? (If not, random settings will be applied) [y/n]: y # 输入y自定义面板设置
 Please set up your username: # 输入用户名
