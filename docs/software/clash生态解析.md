@@ -20,27 +20,15 @@
 
 目前仍在维护的只有mihomo，不推荐使用其他版本的clash
 
-> [!NOTE]
+> [!NOTE] 
 >
-> **clash版本区别**
->
-> 原版clash：开源内核，已删库
->
-> Clash Premium：闭源内核，已删库
->
-> Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持所有原开源核心的全部特性，支持原 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
->
-> mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
-
-> [!NOTE] clash-meta相关项目地址
+> **mihomo相关项目地址**
 >
 > mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
 >
 > MetaCubeX的github：https://github.com/MetaCubeX
 >
 > mihomo docker：https://hub.docker.com/r/metacubex/mihomo
-
-
 
 
 
@@ -148,7 +136,10 @@ ShellCrash：命令行界面的客户端，https://github.com/juewuy/ShellCrash
 - 开源更放心
 - 支持更多新协议
 
-## Clash Meta协议
+
+
+### Clash Meta协议
+
 参考文章：[Clash切换内核增加自建协议 - Yaxin Dong (董亚鑫) - Homepage (10181128.xyz)](https://10181128.xyz/2023/02/22/Clash切换内核，增加多种自建协议/)
 
 参考文章：[Clash Verge 替换最新 Clash.Meta 内核 - Yaxin Dong (董亚鑫) - Homepage (10181128.xyz)](https://10181128.xyz/2023/11/17/ClashVerge替换最新Clash.Meta内核/)
@@ -169,72 +160,80 @@ ShellCrash：命令行界面的客户端，https://github.com/juewuy/ShellCrash
 2. [Clash for Windows 下载](https://github.com/Fndroid/clash_for_windows_pkg/releases) (根据 OS 下载对应版本，如 WinOS: **Clash.for.Windows.Setup.0.20.33.exe**)
 3. [Clash.Meta Alpha 内核下载](https://github.com/MetaCubeX/Clash.Meta/releases) (根据 OS 下载对应版本，如 WinOS: **clash.meta-windows-amd64-alpha-xxx.zip**，如果是ARM则是 **clash.meta-windows-arm64-alpha-xxx.zip**)
 
-## 一、Windows端内核切换
 
-1. 将 Clash.Meta Alpha 内核**解压**后，将内核 clash.meta-windows-amd64.exe **复制**到以下目录中。
 
-   ```
-   E:\Clash for Windows\resources\static\files\win\x64
-   ```
+## Linux裸核使用
 
-2. 将集成内核 clash-win64.exe 重命名备份为 clash-win64dyx.exe 。
-
-3. 将内核 clash.meta-windows-amd64.exe 重命名为 **clash-win64.exe** 。
-
-4. 在 **Clash General** 页面中，第四行 Clash Core 处显示 **Unknown(xxxxx)** 则替换成功,，括号里的版本号有可能会不同。
-
-## 二. MacOS端内核切换
-
-  友情提示：若下载的 Clash for Windows 无法使用，提示**已损坏，无法打开**或者**无法验证开发者**：
-
-```
-sudo spctl --master-disable
-```
-
-  若还是无法运行，请输入下面的命令(**命令最后有一个空格**)之后，在程序中找到报错的程序拖到终端框中，回车。
-
-```
-sudo xattr -d com.apple.quarantine 
-```
-
-1. MacOS 的内核路径如下 ( M1/M2 芯片)，Intel 的处理器，路径大致相同。
+1. 下载并解压内核https://github.com/MetaCubeX/mihomo/releases
 
    ```
-   /Applications/Clash for Windows.app/Contents/Resources/static/files/darwin/arm64/clash-darwin
+   wget https://github.com/MetaCubeX/mihomo/releases/download/v1.19.20/mihomo-linux-amd64-v1-v1.19.20.gz
+   gunzip mihomo-linux-amd64-v1-v1.19.20.gz
    ```
 
-2. 若要进行使用，需要把原内核改名或是删除。把所需的新内核 Meta 文件放置此处并改名以后，若显示为白色文件则需要**授权**，授权之后，内核文件变为黑色文件才可被使用。授权方式如下，将白色文件拖到命令后面，例如：
+2. 将内核移动到`/usr/local/bin/`并重命名为`mihomo`，给执行权限
 
    ```
-   chmod +x /Applications/clash\ for\ windows.app/Contents/Resources/static/files/darwin/arm64/clash-darwin
+   mv mihomo-linux-amd64-v1-v1.19.20 /usr/local/bin/mihomo
+   chmod +x /usr/local/bin/mihomo
    ```
 
-3. 在 **Clash General** 页面中，第四行 Clash Core 处显示 **Unknown(xxxxx)** 则替换成功,，括号里的版本号有可能会不同。
+3. 创建存放配置文件`config.yaml`的目录，把配置文件放进去。
 
-## 三、OpenClash内核切换
+   **注意：只能是config.yaml这个文件名，不支持其他名字**
 
-  OpenClash 比较智能化，会识别相关的协议类型从而自动的切换 Meta 内核。所以，只要设置好 OpenClash 以后，其他的就不用管了，贴上运行日志：
+   ```
+   mkdir -p ~/data/mihomo
+   ```
 
-```
-2022-08-23 12:29:40 提示：Disney Plus 域名预解析完成!
-2022-08-23 12:29:33 提示：开始预解析 Disney Plus 域名...
-2022-08-23 12:29:33 提示：Netflix 域名预解析完成!
-2022-08-23 12:28:18 提示：开始预解析 Netflix 域名...
-2022-08-23 12:27:18 OpenClash 启动成功，请等待服务器上线！
-2022-08-23 12:27:17 第九步: 添加计划任务,启动进程守护程序...
-2022-08-23 12:27:17 第八步: 重启 Dnsmasq 程序...
-2022-08-23 12:27:17 第七步: 设置防火墙规则...
-2022-08-23 12:27:17 第六步: 等待主程序下载外部文件...
-2022-08-23 12:27:14 第五步: 检查内核启动状态...
-2022-08-23 12:27:13 提示: 检测到配置了 Meta 内核专属功能，调用 Meta 内核启动...
-2022-08-23 12:27:13 第四步: 启动主程序...
-2022-08-23 12:27:12 第三步: 修改配置文件...
-2022-08-23 12:27:12 第二步: 组件运行前检查...
-2022-08-23 12:27:12 第一步: 获取配置...
-2022-08-23 12:27:12 OpenClash 开始启动...
-```
+   配置文件中必须有`TUN模式`相关配置
 
+   ```
+   tun:
+     enable: true
+     stack: system
+     auto-route: true
+     auto-detect-interface: true
+   ```
 
+4. 创建`systemd`配置文件，配置开机自启动
+
+   ```
+   nano /etc/systemd/system/mihomo.service
+   ```
+
+   ```
+   [Unit]
+   Description=mihomo Daemon, Another Clash Kernel.
+   After=network.target NetworkManager.service systemd-networkd.service iwd.service
+   [Service]
+   Type=simple
+   LimitNPROC=500
+   LimitNOFILE=1000000
+   CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+   AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+   Restart=always
+   ExecStartPre=/usr/bin/sleep 1s
+   ExecStart=/usr/local/bin/mihomo -d ~/data/mihomo
+   # ExecStart=[核心目录]/mihomo -d [配置文件目录]
+   ExecReload=/bin/kill -HUP $MAINPID
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+5. 启动`mihomo`服务
+
+   ```
+   systemctl daemon-reload # 重载 systemd
+   systemctl enable mihomo # 允许 mihomo 开机自启动
+   systemctl start mihomo # 立即启动 mihomo
+   systemctl status mihomo # 检查 mihomo 的运行状况
+   systemctl disable mihomo # 取消 mihomo 开机自启动
+   systemctl stop mihomo # 停止 mihomo
+   journalctl -u mihomo -f #检查 mihomo 的运行日志
+   ```
+   
+   
 
 ## 规则转换
 
