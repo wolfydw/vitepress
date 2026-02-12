@@ -184,6 +184,8 @@ ShellCrash：命令行界面的客户端，https://github.com/juewuy/ShellCrash
    ```
    systemctl restart networking
    ```
+   
+7. 到这里就大功告成了，后续可以通过`<ip>:<port>/ui`进入面板来管理订阅和分流
 
 
 
