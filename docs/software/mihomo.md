@@ -1,140 +1,581 @@
-# Linux配置mihomo代理并开启TUN模式
+# mihomo家族
 
-原文链接：https://zfxt.top/posts/70b7a805/index.html
+最后更新时间：2026年2月12日
 
-先介绍一下什么是`mihomo`:
+## 内核演变史
 
-> `Mihomo`原名`Clash Meta`，是基于广受欢迎的开源网络代理工具Clash开发的增强网络代理工具。它不仅继承了Clash的核心功能，还增加了一些独特的特性，如支持更多的出站传输协议和复杂的规则控制等。在2023年经历了Clash for Windows删库事件之后，原Clash项目删库停止更新，于是开发者将Clash Meta改名为Mihomo，继续进行维护和更新。
+- 原版开源clash：作者Dreamacro，已删库（时间2023.11.03）
 
-所以，曾经使用过clash的应该可以很快上手。
+- Clash Premium：闭源的clash高级版，和开源clash同作者，已删库，最终版本2023.08.17
+  备份下载地址：https://downloads.clash.wiki/ClashPremium
 
-[mihomo项目地址](https://github.com/MetaCubeX/mihomo)
+- Clash.Meta：基于开源项目 Clash 的二次开发版本，并增加了一些独有特性；Meta 核心支持clash开源核心的全部特性和 Clash Premium 核心部分特性。在一众clash陆续删库后，Clash.Meta 也于2023-11-06暂时归档了
 
-在本篇文章中，将会使用`mihomo`内核来进行代理，同时还会打开`TUN模式`实现透明代理。如有需要请接着往下看吧。
+- mihomo：2023-12-13， Clash.Meta 改名为 mihomo并恢复更新
+  项目地址：https://github.com/MetaCubeX/mihomo
 
-## mihomo安装和配置
 
-### 下载mihomo内核
 
-1. 进入[mihomo内核下载地址](https://github.com/MetaCubeX/mihomo/releases)去下载对应架构版本的文件。比如`mihomo-linux-amd64-alpha-b3db113.gz`，解压后将`mihomo-linux-amd64`上传到 linux 上，同时重命名为`mihomo`。
+目前仍在维护的只有mihomo，不推荐使用其他版本的clash
 
-2. 给 mihomo 增加执行权限：
+> [!NOTE] 
+>
+> **mihomo相关项目地址**
+>
+> mihomo、metacubexd、Yacd-meta、ClashMetaForAndroid
+>
+> MetaCubeX的github：https://github.com/MetaCubeX
+>
+> mihomo docker：https://hub.docker.com/r/metacubex/mihomo
+
+
+
+## 套壳工具
+
+|       软件        | Windows | macOS | Linux | Android |  最后更新  | 最终版本 | 作者        |
+| :---------------: | :-----: | :---: | :---: | :-----: | :--------: | :------: | ----------- |
+|      FlClash      |         |       |   ✅   |    ✅    |  正常更新  |          |             |
+|    clash-party    |    ✅    |   ✅   |   ✅   |         |  正常更新  |          |             |
+|  Clash Verge Rev  |    ✅    |   ✅   |   ✅   |         |  正常更新  |          |             |
+|    Clash Verge    |    ✅    |   ✅   |       |         | 2023.11.03 |  1.3.8   |             |
+| clash for windows |    ✅    |   ✅   |       |         | 2023.11.02 | 0.20.39  | Fndroid     |
+|  ClashForAndroid  |         |       |       |    ✅    |            |          | Kr328       |
+|      ClashX       |         |   ✅   |       |         |            | 1.118.1  | yichengchen |
+|    ClashX pro     |         |   ✅   |       |         |            |          |             |
+
+- Clash Verge Rev：Clash Verge的延续，正常更新
+
+  项目地址：https://github.com/clash-verge-rev/clash-verge-rev
+
+- clash-party：正常更新
+  项目地址：https://github.com/mihomo-party-org/mihomo-party
+
+- FlClash：正常更新
+  项目地址：https://github.com/chen08209/FlClash
+
+
+
+## 面板
+
+面板都是纯基于clash的API，所以只能提供基本的配置展示和切换等功能
+
+- Clash Dashboard：作者Dreamacro，已删库
+- Yacd：2022年11月停更，最终版本0.38
+  项目地址：https://github.com/haishanh/yacd
+- Metacubed：正常更新
+  项目地址：https://github.com/MetaCubeX/metacubexd
+
+
+
+## 插件
+
+openclash：openwrt上的插件，通过web操作，可以增删订阅链接，功能上更加接近桌面客户端
+
+openwrt-Mihomo：
+
+ShellCrash：命令行界面的客户端，https://github.com/juewuy/ShellCrash
+
+
+
+## Linux裸核使用
+
+1. 下载并解压内核https://github.com/MetaCubeX/mihomo/releases
 
    ```
-   chmod +x mihomo
+   wget https://github.com/MetaCubeX/mihomo/releases/download/v1.19.20/mihomo-linux-amd64-v1-v1.19.20.gz
+   gunzip mihomo-linux-amd64-v1-v1.19.20.gz
    ```
 
-3. 将`mihomo`移动到`/usr/local/bin/`目录
+2. 将内核移动到`/usr/local/bin/`并重命名为`mihomo`，给执行权限
 
    ```
-   cp mihomo /usr/local/bin
+   mv mihomo-linux-amd64-v1-v1.19.20 /usr/local/bin/mihomo
+   chmod +x /usr/local/bin/mihomo
    ```
 
-4. 创建运行目录
+3. 创建存放配置文件`config.yaml`的目录，把配置文件放进去。
+
+   **注意：只能是config.yaml这个文件名，不支持其他名字**
 
    ```
-   mkdir /etc/mihomo -p
+   mkdir -p ~/data/mihomo
    ```
 
-
-
-### 配置运行环境
-
-将以下文件放到`/etc/mihomo`的目录下
-
-配置文件config.yaml
-
-....
-
-
-
-## 将mihomo注册为service
-
-1. 在将`mihomo`添加到系统服务之前，最好手动运行一次观察是否正常。
+   配置文件中打开`TUN模式`相关配置
 
    ```
-   /usr/local/bin/mihomo -d /etc/mihomo
+   tun:
+     enable: true
+     stack: mixed
+     # mtu: 9000
+     dns-hijack:
+       - "any:53"
+       - "tcp://any:53"
+     auto-route: true
+     auto-redirect: true
+     auto-detect-interface: true
+     # 排除docker0网卡，避免docker访问流量被tun接管，需要在compose中声明network_mode: bridge
+     exclude-interface:
+       - "docker0"
    ```
 
-2. 如果启动成功，没出现错误信息，那就可以创建 mihomo 服务：
+4. 创建`systemd`配置文件，配置开机自启动
 
    ```
    nano /etc/systemd/system/mihomo.service
    ```
 
-3. 粘贴以下内容
-
    ```
-   ini
-   
    [Unit]
    Description=mihomo Daemon, Another Clash Kernel.
    After=network.target NetworkManager.service systemd-networkd.service iwd.service
-   
    [Service]
    Type=simple
    LimitNPROC=500
    LimitNOFILE=1000000
-   CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH
-   AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH
+   CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+   AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
    Restart=always
    ExecStartPre=/usr/bin/sleep 1s
-   ExecStart=/usr/local/bin/mihomo -d /etc/mihomo
+   ExecStart=/usr/local/bin/mihomo -d ~/data/mihomo
+   # ExecStart=[核心目录]/mihomo -d [配置文件目录]
    ExecReload=/bin/kill -HUP $MAINPID
-   
    [Install]
    WantedBy=multi-user.target
    ```
 
-4. 重载`systemd`并启动`mihomo`服务
+5. 启动`mihomo`服务
 
    ```
    systemctl daemon-reload # 重载 systemd
-   systemctl enable mihomo # 允许服务自启动
-   systemctl start mihomo # 启动服务
-   systemctl disable mihomo # 取消服务自启动
-   systemctl stop mihomo # 停止服务
+   systemctl enable mihomo # 允许 mihomo 开机自启动
+   systemctl start mihomo # 立即启动 mihomo
+   systemctl status mihomo # 检查 mihomo 的运行状况
+   systemctl disable mihomo # 取消 mihomo 开机自启动
+   systemctl stop mihomo # 停止 mihomo
+   journalctl -u mihomo -f #检查 mihomo 的运行日志
    ```
 
-接下来访问对应的ip的控制面板`http://xxx.xxx.xxx.xxx/ui:9090`就可以控制你的`mihomo`代理了。
+6. 启用IP转发
 
-
-
-## 配置TUN模式
-
-> [!note]
->
-> TUN 模式是 Windows 系统中的一种虚拟网络接口模式,全称为”TUNnel”模式。
->
-> TUN 模式会创建一个虚拟的点对点网络连接,这个连接会显得像一个真实的物理网络接口一样。它常用于创建 VPN(虚拟私有网络)连接。
->
-> TUN是三层设备 ，模拟一个网络层设备，操作第三层数据包比如 IP 数据包，TUN 虚拟网卡实现 IP 层隧道
-> Tun 模式通过新建一个 Tun 虚拟网卡接受操作系统的三层浏览流量，从而拓展 Clash 入口（inbound）转发能力，Tun 模式可以提升 Clash 处理 UDP 流量的能力，可以劫持任何三层流量，实现 DNS 劫持也是轻而易举，并且它与部分操作系统的网络栈结合也非常好，可以提升利用 iptables 等组件的能力
-
-相比于普通的全局代理模式(即配置http_proxy之类，详见我曾经的某篇文章[clash快速开启和关闭代理模式](https://zfxt.top/posts/9ff5edc2/?highlight=clash))
-
-TUN模式会从网络层，将所有的数据都进行转发。(解决了一些：docker必须单独配置主动代理，docker内容器无法走代理以及一些系统层面不走普通代理的问题) 这种模式在我平常玩路由器配置`openclash`的时候，一般都称之为`透明代理`。而这才是我最需要的功能。
-
-**开启流量转发**
-
-1. 编辑`/etc/sysctl.conf`文件
+   **一键设置**
 
    ```
-   nano /etc/sysctl.conf
+   sed -i '/net.ipv4.ip_forward/s/^#//;/net.ipv6.conf.all.forwarding/s/^#//' /etc/sysctl.conf && sysctl -p && systemctl restart networking
    ```
-   
-2. 将以下代码取消注释
+
+   **手动设置**
+
+   编辑`nano /etc/sysctl.conf`，把下面两个前面的注释去掉，使其生效。
 
    ```
    net.ipv4.ip_forward=1
    net.ipv6.conf.all.forwarding=1
    ```
-   
-3. 加载内核参数
+
+   应用更改
 
    ```
    sysctl -p
    ```
 
-具体的TUN配置已经在上面的`config.yaml`中配置完了。所以到这里为止。我们就可以愉快的玩耍了！
-(声明，我并没有使用fake-ip模式。考虑原因的话，我觉得我不是特别需要很好的性能，相对而言可以直观的看到ping通的信号更加方便)
+   重启网络
+
+   ```
+   systemctl restart networking
+   ```
+
+
+
+### 为什么要开IP转发
+
+TUN模型下，系统会创建一个虚拟网卡，宿主机的所有网络请求会如下：应用进程 → 宿主路由表 → TUN 接口 → 物理网卡 → 外部网络，从而访问到数据。
+
+而在docker容器中，宿主机会被认为是一个虚拟网卡，也就是：容器进程 → 容器路由表 → 容器虚拟网卡（veth）→ 宿主机网桥（docker0）→ 宿主路由表 → TUN 接口 → 物理网卡 → 外部网络。
+
+如果没有打开ip转发，内核禁止跨接口转发(从docker0->tun0)。所以无法正确访问。
+
+要解决这个问题，要么直接为docker配置系统代理，要么打开ip转发。
+
+### TUN模式导致外网无法访问docker容器服务的方案
+
+故障描述：开启mihomo的tun模式后，无法在外网使用`[公网IP]:[端口]`的方法访问服务器的docker服务
+
+GPT分析：mihomo 开启后改写了路由/iptables（TUN 自动路由），导致回包被送进 tun0 或被 rp_filter 拒收，所以外网 ping 不通、 docker服务也访问失败。
+
+处理方法：
+
+1. 在`config.yaml`中添加如下配置
+
+   ```
+   tun:
+   	exclude-interface:
+    	 - "docker0"
+    	 - "br-3136ba4567c"
+   ```
+
+2. 在使用 `docker run`，以及在 `compose.yml` 文件中声明了 `network_mode: bridge` 时，容器会连接到 `docker0` 网络
+
+3. 当未声明 `network_mode: bridge` 时，Docker Compose 会为项目自动创建一个默认网络，例如 `br-3136ba4567c`
+
+4. 可以使用`ip addr show`查看本机所有网卡，或使用` docker inspect <container_id> `查看容器正在使用的网络
+
+
+
+## 规则转换
+
+### 推荐使用substore
+
+*这里摘取官方仓库的介绍*：
+
+> Advanced Subscription Manager for QX, Loon, Surge, Stash and Shadowrocket.
+
+项目地址：https://github.com/sub-store-org/Sub-Store
+
+官方教程：[Sub-Store 相关教程 (notion.site)](https://xream.notion.site/Sub-Store-abe6a96944724dc6a36833d5c9ab7c87)
+
+Docker compose.yml
+
+```
+services:
+  sub-store:
+    image: xream/sub-store
+    container_name: sub-store
+    restart: always
+    volumes:
+      - ./data:/opt/app/data
+    environment:
+      - SUB_STORE_CRON=0 0 * * *
+      - SUB_STORE_FRONTEND_BACKEND_PATH=/2cXaAxRGfddmGz2yx1wA⁠
+    ports:
+      - "3001:3001"
+    stdin_open: true
+    tty: true
+```
+
+> [important] 使用说明
+>
+> 通过前端地址 + 后端地址来快速访问面板：http://127.0.0.1:3001?api=http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA⁠
+>
+> 意思是 后端地址为 http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA
+>
+> 简单验证一下 http://127.0.0.1:3001/2cXaAxRGfddmGz2yx1wA/api/utils/env 可以看到版本信息，同样此 URL 也可以作为健康检查的 URL
+>
+> PS：如果设置了反代，那前后端都要用https
+
+
+
+## Clash规则写法规则
+
+1. Vless 规则 (**Meta 内核**) - 包含 TCP(XTLS) 、WS和gRPC 的三种协议。
+
+   ```
+   - name: "vless-tcp"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     network: tcp
+     servername: a.xyz
+       
+   - name: "vless-ws"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     udp: true
+     tls: true
+     network: ws
+     servername: a.xyz
+     ws-opts:
+       path: /dyxws
+       headers:
+         Host: a.xyz
+   
+   - name: "vless-gRPC"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     network: grpc
+     udp: true
+     tls: true
+     servername: a.xyz
+     grpc-opts:
+       grpc-service-name: "dyxgrpc"
+     client-fingerprint: chrome
+     
+   - name: "Vless_TCP/TLS_Vision"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     network: tcp
+     udp: true
+     tls: true
+     flow: xtls-rprx-vision
+     client-fingerprint: chrome
+     
+   - name: "Vless_Reality_Vision"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     network: tcp
+     servername: a.xyz
+     flow: xtls-rprx-vision
+     udp: true
+     tls: true
+     reality-opts:
+       public-key: publicKey
+       short-id: shortid
+     client-fingerprint: chrome
+     skip-cert-verify: true
+   
+   - name: "Vless_Reality_gRPC"
+     type: vless
+     server: a.xyz
+     port: port
+     uuid: uuid
+     network: grpc
+     servername: a.xyz
+     udp: true
+     tls: true
+     reality-opts:
+       public-key: publicKey
+       short-id: shortid
+     client-fingerprint: chrome
+     skip-cert-verify: true
+     grpc-opts:
+       grpc-service-name: grpc
+   ```
+
+2. Hysteria 规则 (**Meta 内核**)
+
+   ```
+   - name: Hysteria
+     type: hysteria
+     server: a.xyz
+     port: port
+     auth_str: auth_str
+     alpn:
+     	- h3
+     protocol: udp
+     up: '50 Mbps'
+     down: '100 Mbps'
+   
+   - name: Hysteria2
+     type: hysteria2
+     server: a.xyz
+     port: port       # 节点端口，目前暂不支持端口跳跃
+     password: password
+     sni: a.xyz       # 必应自签证书域名(www.bing.com)或 CA 证书域名
+     insecure: false  # 使用自签证书请保持此处为 true，如为 CA 证书建议修改为 false
+   ```
+
+3. Tuic 规则 (**Meta 内核**)
+
+   ```
+   - name: "Vless_Reality_Tuic"
+     type: tuic
+     server: a.xyz
+     port: port
+     uuid: uuid
+     password: password
+     alpn: 
+       - h3
+     congestion_controller: bbr
+     disable-sni: true
+     reduce-rtt: true
+     sni: dyx-singbox_tuic
+   ```
+
+4. Vmess 规则 - 加密支持auto/aes-128-gcm/chacha20-poly1305/none
+
+   ```
+   - name: "vmess"
+     type: vmess
+     server: a.xyz
+     port: port
+     uuid: uuid
+     alterId: 32
+     cipher: auto
+   
+   - name: "Vmess-ws"
+     server: a.xyz
+     port: port
+     type: vmess
+     uuid: uuid
+     alterId: 0
+     cipher: auto
+     udp: true
+     tls: true
+     skip-cert-verify: true
+     servername: "a.xyz"
+     network: ws
+     ws-opts: 
+       path: /dyxvws
+       headers: 
+         Host: a.xyz
+   
+   - name: "vmess-h2"
+     type: vmess
+     server: a.xyz
+     port: port
+     uuid: uuid
+     alterId: 32
+     cipher: auto
+     network: h2
+     tls: true
+     h2-opts:
+       host:
+         - http.example.com
+         - http-alt.example.com
+       path: /path
+     
+   - name: "vmess-http"
+     type: vmess
+     server: a.xyz
+     port: port
+     uuid: uuid
+     alterId: 32
+     cipher: auto
+    
+   - name: "vmess-gRPC"
+     server: a.xyz
+     port: port
+     type: vmess
+     uuid: uuid
+     alterId: 32
+     cipher: auto
+     network: grpc
+     tls: true
+     servername: a.xyz
+     grpc-opts:
+       grpc-service-name: "example"
+   ```
+
+5. Trojan 规则
+
+   ```
+   - name: "trojan"
+     type: trojan
+     server: a.xyz
+     port: port
+     password: password
+     udp: true
+     sni:a.xyz
+     alpn:
+     	- http/1.1
+     skip-cert-verfy: true
+    
+   - name: "trojan-gRPC"
+     server: a.xyz
+     port: port
+     type: trojan
+     password: password
+     network: grpc
+     sni: a.xyz
+     udp: true
+     grpc-opts:
+       grpc-service-name: "dyxtrojangrpc"
+    
+   - name: "trojan-ws"
+     server: a.xyz
+     port: port
+     type: trojan
+     password: password
+     network: ws
+     sni: a.xyz
+     udp: true
+     ws-opts:
+       path: /path
+       headers:
+         Host: a.xyz
+   ```
+
+6. Shadowsocks 规则
+
+   ```
+   # 加密支持:
+   #   aes-128-gcm aes-192-gcm aes-256-gcm
+   #   aes-128-cfb aes-192-cfb aes-256-cfb
+   #   aes-128-ctr aes-192-ctr aes-256-ctr
+   #   rc4-md5 chacha20-ietf xchacha20
+   #   chacha20-ietf-poly1305 xchacha20-ietf-poly1305
+   # 【Meta专属】支持SS2022加密：
+   #   2022-blake3-aes-128-gcm
+   #   2022-blake3-aes-256-gcm
+   #   2022-blake3-chacha20-poly1305
+   
+   - name: "ss1"
+     type: ss
+     server: a.xyz
+     port: port
+     cipher: chacha20-ietf-poly1305
+     password: "password"
+    
+   - name: "ss2"
+     type: ss
+     server: a.xyz
+     port: port
+     cipher: chacha20-ietf-poly1305
+     password: "password"
+     plugin: obfs
+     plugin-opts:
+       mode: tls # or http
+       # host: bing.com
+    
+   - name: "ss3"
+     type: ss
+     server: a.xyz
+     port: port
+     cipher: chacha20-ietf-poly1305
+     password: "password"
+     plugin: v2ray-plugin
+     plugin-opts:
+   ```
+
+7. socks5 规则
+
+   ```
+   - name: "socks"
+     type: socks5
+     server: a.xyz
+     port: port
+   ```
+
+8. HTTP 规则
+
+   ```
+   - name: "http"
+     type: http
+     server: a.xyz
+     port: port
+     # headers:         #【Meta专属】
+     #   X-T5-Auth: "1962xxxxx709"
+     #   User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 ...... "
+   ```
+
+9. Snell 规则
+
+   ```
+   - name: "snell"      # 不支持UDP
+     type: snell
+     server: a.xyz
+     port: port
+     psk: psk
+     # version: 2
+     # obfs-opts:
+       # mode: http # or tls
+       # host: bing.com
+   ```
+
+## 范例YAML文件
+
+
+
+
+https://github.com/blackmatrix7/ios_rule_script/issues/1268
+
+去除了IP-ASN后的blackmatrix7规则：https://github.com/ericz15/ios_rule_script
