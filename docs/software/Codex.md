@@ -9,7 +9,7 @@
    ```
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
    ```
-   
+
    > [!note]
    >
    > **nvm：Node Version Manager**
@@ -17,13 +17,20 @@
    > Github项目地址：https://github.com/nvm-sh/nvm
 
 1. 使用nvm安装node（会同时带 npm）
-   
+
    ```
    nvm install node
    node --version # 确认node版本 ≥ 22
    npm --version
    ```
-   
+
+1. 设置nvm默认别名
+
+   ```
+   nvm alias default 25 # 和上面查询到的大版本号保持一致
+   nvm use default
+   ```
+
 1. 使用npm安装codex
 
    ```
